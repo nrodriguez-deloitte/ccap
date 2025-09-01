@@ -1,57 +1,53 @@
-import { Button } from "./ui/button";
-import { 
-  Search, 
-  Map, 
-  AlertTriangle, 
-  FileText, 
-  Layout, 
-  Plus,
-  Sparkles
-} from "lucide-react";
+"use client"
+
+import type React from "react"
+
+import { Button } from "../ui/button"
+import { Map, AlertTriangle, FileText, Layout, Plus, Sparkles } from "lucide-react"
 
 interface TopNavigationProps {
-  activeView: string;
-  onViewChange: (view: string) => void;
+  activeView: string
+  onViewChange: (view: string) => void
 }
 
 interface NavItem {
-  id: string;
-  label: string;
-  icon: React.ReactNode;
+  id: string
+  label: string
+  icon: React.ReactNode
 }
 
 const navigationItems: NavItem[] = [
   {
     id: "ai-search",
     label: "AI Search",
-    icon: <Sparkles className="h-4 w-4" />
+    icon: <Sparkles className="h-4 w-4" />,
   },
   {
     id: "map",
     label: "Map",
-    icon: <Map className="h-4 w-4" />
+    icon: <Map className="h-4 w-4" />,
   },
   {
     id: "outages",
     label: "Outages",
-    icon: <AlertTriangle className="h-4 w-4" />
+    icon: <AlertTriangle className="h-4 w-4" />,
   },
   {
     id: "records",
     label: "Records",
-    icon: <FileText className="h-4 w-4" />
+    icon: <FileText className="h-4 w-4" />,
   },
   {
     id: "templates",
     label: "Templates",
-    icon: <Layout className="h-4 w-4" />
+    icon: <Layout className="h-4 w-4" />,
   },
   {
     id: "create-comms",
     label: "Create comms",
-    icon: <Plus className="h-4 w-4" />
-  }
-];
+    icon: <Plus className="h-4 w-4" />,
+  },
+]
 
 export function TopNavigation({ activeView, onViewChange }: TopNavigationProps) {
   return (
@@ -63,8 +59,8 @@ export function TopNavigation({ activeView, onViewChange }: TopNavigationProps) 
               key={item.id}
               variant={activeView === item.id ? "default" : "ghost"}
               className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-all ${
-                activeView === item.id 
-                  ? "bg-gradient-to-r from-green-400 to-blue-500 text-white shadow-lg" 
+                activeView === item.id
+                  ? "bg-gradient-to-r from-green-400 to-blue-500 text-white shadow-lg"
                   : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
               }`}
               onClick={() => onViewChange(item.id)}
@@ -76,5 +72,5 @@ export function TopNavigation({ activeView, onViewChange }: TopNavigationProps) 
         </div>
       </div>
     </div>
-  );
+  )
 }

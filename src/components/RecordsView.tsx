@@ -1,7 +1,7 @@
-import { Card } from "./ui/card";
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
-import { FileText, Search, Filter, Download } from "lucide-react";
+import { Card } from "../../components/ui/card"
+import { Button } from "../../components/ui/button"
+import { Input } from "../../components/ui/input"
+import { FileText, Search, Filter, Download } from "lucide-react"
 
 export function RecordsView() {
   return (
@@ -10,9 +10,7 @@ export function RecordsView() {
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-800 mb-2">Records & Archive</h1>
-          <p className="text-gray-600">
-            Search and manage all your work records, communications, and documentation
-          </p>
+          <p className="text-gray-600">Search and manage all your work records, communications, and documentation</p>
         </div>
 
         {/* Search Bar */}
@@ -20,10 +18,7 @@ export function RecordsView() {
           <div className="flex items-center space-x-4">
             <div className="flex-1 relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-              <Input
-                placeholder="Search records, communications, documents..."
-                className="pl-10"
-              />
+              <Input placeholder="Search records, communications, documents..." className="pl-10" />
             </div>
             <Button variant="outline">
               <Filter className="h-4 w-4 mr-2" />
@@ -47,12 +42,11 @@ export function RecordsView() {
               </div>
               <h3 className="font-semibold mb-2">Network Incident Report #{i}</h3>
               <p className="text-sm text-gray-600 mb-4">
-                Detailed analysis of the network outage that occurred in the eastern region affecting multiple customers.
+                Detailed analysis of the network outage that occurred in the eastern region affecting multiple
+                customers.
               </p>
               <div className="flex items-center justify-between">
-                <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
-                  Incident Report
-                </span>
+                <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">Incident Report</span>
                 <Button variant="outline" size="sm">
                   View
                 </Button>
@@ -62,5 +56,5 @@ export function RecordsView() {
         </div>
       </div>
     </div>
-  );
+  )
 }

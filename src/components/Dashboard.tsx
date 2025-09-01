@@ -1,17 +1,17 @@
-import { Card } from "./ui/card";
-import { Badge } from "./ui/badge";
-import { Progress } from "./ui/progress";
-import { AlertTriangle, Clock, CheckCircle, Users, FileText, TrendingUp } from "lucide-react";
+import { Card } from "../../components/ui/card"
+import { Badge } from "../../components/ui/badge"
+import { Progress } from "../../components/ui/progress"
+import { AlertTriangle, Clock, FileText, TrendingUp } from "lucide-react"
 
 interface CaseItem {
-  id: string;
-  title: string;
-  type: string;
-  status: "draft" | "review" | "approved" | "published" | "blocked";
-  priority: "high" | "medium" | "low";
-  assignee: string;
-  dueDate: string;
-  progress: number;
+  id: string
+  title: string
+  type: string
+  status: "draft" | "review" | "approved" | "published" | "blocked"
+  priority: "high" | "medium" | "low"
+  assignee: string
+  dueDate: string
+  progress: number
 }
 
 const mockCases: CaseItem[] = [
@@ -23,17 +23,17 @@ const mockCases: CaseItem[] = [
     priority: "high",
     assignee: "Sarah Chen",
     dueDate: "2025-09-02",
-    progress: 75
+    progress: 75,
   },
   {
-    id: "CASE-002", 
+    id: "CASE-002",
     title: "GDPR Compliance Assessment",
     type: "Compliance",
     status: "blocked",
     priority: "high",
     assignee: "Michael Torres",
     dueDate: "2025-08-30",
-    progress: 45
+    progress: 45,
   },
   {
     id: "CASE-003",
@@ -43,7 +43,7 @@ const mockCases: CaseItem[] = [
     priority: "medium",
     assignee: "Lisa Wang",
     dueDate: "2025-09-05",
-    progress: 30
+    progress: 30,
   },
   {
     id: "CASE-004",
@@ -53,35 +53,45 @@ const mockCases: CaseItem[] = [
     priority: "low",
     assignee: "James Miller",
     dueDate: "2025-08-28",
-    progress: 100
-  }
-];
+    progress: 100,
+  },
+]
 
 const getStatusColor = (status: string) => {
   switch (status) {
-    case "draft": return "bg-gray-100 text-gray-800";
-    case "review": return "bg-blue-100 text-blue-800";
-    case "approved": return "bg-green-100 text-green-800";
-    case "published": return "bg-purple-100 text-purple-800";
-    case "blocked": return "bg-red-100 text-red-800";
-    default: return "bg-gray-100 text-gray-800";
+    case "draft":
+      return "bg-gray-100 text-gray-800"
+    case "review":
+      return "bg-blue-100 text-blue-800"
+    case "approved":
+      return "bg-green-100 text-green-800"
+    case "published":
+      return "bg-purple-100 text-purple-800"
+    case "blocked":
+      return "bg-red-100 text-red-800"
+    default:
+      return "bg-gray-100 text-gray-800"
   }
-};
+}
 
 const getPriorityColor = (priority: string) => {
   switch (priority) {
-    case "high": return "bg-red-100 text-red-800";
-    case "medium": return "bg-yellow-100 text-yellow-800";
-    case "low": return "bg-green-100 text-green-800";
-    default: return "bg-gray-100 text-gray-800";
+    case "high":
+      return "bg-red-100 text-red-800"
+    case "medium":
+      return "bg-yellow-100 text-yellow-800"
+    case "low":
+      return "bg-green-100 text-green-800"
+    default:
+      return "bg-gray-100 text-gray-800"
   }
-};
+}
 
 export function Dashboard() {
-  const totalCases = mockCases.length;
-  const activeCases = mockCases.filter(c => c.status !== "published").length;
-  const blockedCases = mockCases.filter(c => c.status === "blocked").length;
-  const overdueCount = 1; // Mock data
+  const totalCases = mockCases.length
+  const activeCases = mockCases.filter((c) => c.status !== "published").length
+  const blockedCases = mockCases.filter((c) => c.status === "blocked").length
+  const overdueCount = 1 // Mock data
 
   return (
     <div className="p-6 space-y-6">
@@ -140,13 +150,14 @@ export function Dashboard() {
         <h2 className="mb-4">Active Cases</h2>
         <div className="space-y-4">
           {mockCases.map((caseItem) => (
-            <div key={caseItem.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 transition-colors">
+            <div
+              key={caseItem.id}
+              className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 transition-colors"
+            >
               <div className="flex-1 space-y-2">
                 <div className="flex items-center space-x-3">
                   <span className="font-medium">{caseItem.id}</span>
-                  <Badge className={getStatusColor(caseItem.status)}>
-                    {caseItem.status}
-                  </Badge>
+                  <Badge className={getStatusColor(caseItem.status)}>{caseItem.status}</Badge>
                   <Badge className={getPriorityColor(caseItem.priority)} variant="outline">
                     {caseItem.priority}
                   </Badge>
@@ -172,5 +183,5 @@ export function Dashboard() {
         </div>
       </Card>
     </div>
-  );
+  )
 }

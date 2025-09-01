@@ -1,43 +1,33 @@
-import { useState } from "react";
-import { Card } from "./ui/card";
-import { Button } from "./ui/button";
-import { Badge } from "./ui/badge";
-import { Progress } from "./ui/progress";
-import { Avatar } from "./ui/avatar";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
-import { 
-  CheckCircle, 
-  Clock, 
-  AlertTriangle, 
-  User, 
-  Calendar, 
-  ArrowRight,
-  PlayCircle,
-  PauseCircle,
-  Settings,
-  Plus
-} from "lucide-react";
+"use client"
+
+import { useState } from "react"
+import { Card } from "../../components/ui/card"
+import { Button } from "../../components/ui/button"
+import { Badge } from "../../components/ui/badge"
+import { Progress } from "../../components/ui/progress"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../components/ui/tabs"
+import { CheckCircle, Clock, AlertTriangle, User, PlayCircle, Settings, Plus } from "lucide-react"
 
 interface WorkflowStage {
-  id: string;
-  name: string;
-  status: "completed" | "active" | "pending" | "blocked";
-  owner: string;
-  sla: number; // hours
-  timeSpent: number; // hours
-  dueDate: string;
-  completedDate?: string;
-  gatekeepers: string[];
-  requirements: string[];
+  id: string
+  name: string
+  status: "completed" | "active" | "pending" | "blocked"
+  owner: string
+  sla: number // hours
+  timeSpent: number // hours
+  dueDate: string
+  completedDate?: string
+  gatekeepers: string[]
+  requirements: string[]
 }
 
 interface WorkflowTemplate {
-  id: string;
-  name: string;
-  type: string;
-  stages: WorkflowStage[];
-  totalSLA: number;
-  usage: number;
+  id: string
+  name: string
+  type: string
+  stages: WorkflowStage[]
+  totalSLA: number
+  usage: number
 }
 
 const mockWorkflows: WorkflowTemplate[] = [
@@ -58,10 +48,10 @@ const mockWorkflows: WorkflowTemplate[] = [
         dueDate: "2025-08-27",
         completedDate: "2025-08-26",
         gatekeepers: ["Legal Team"],
-        requirements: ["Template selection", "Client requirements review"]
+        requirements: ["Template selection", "Client requirements review"],
       },
       {
-        id: "stage-2", 
+        id: "stage-2",
         name: "Legal Review",
         status: "active",
         owner: "Michael Torres",
@@ -69,18 +59,18 @@ const mockWorkflows: WorkflowTemplate[] = [
         timeSpent: 12,
         dueDate: "2025-08-29",
         gatekeepers: ["Senior Legal Counsel"],
-        requirements: ["Compliance check", "Risk assessment"]
+        requirements: ["Compliance check", "Risk assessment"],
       },
       {
         id: "stage-3",
-        name: "Client Approval", 
+        name: "Client Approval",
         status: "pending",
         owner: "Lisa Wang",
         sla: 12,
         timeSpent: 0,
         dueDate: "2025-08-30",
         gatekeepers: ["Client", "Account Manager"],
-        requirements: ["Client review", "Final amendments"]
+        requirements: ["Client review", "Final amendments"],
       },
       {
         id: "stage-4",
@@ -91,22 +81,22 @@ const mockWorkflows: WorkflowTemplate[] = [
         timeSpent: 0,
         dueDate: "2025-08-31",
         gatekeepers: ["Authorized Signatory"],
-        requirements: ["Digital signatures", "Document archival"]
-      }
-    ]
-  }
-];
+        requirements: ["Digital signatures", "Document archival"],
+      },
+    ],
+  },
+]
 
 interface ActiveWorkflow {
-  id: string;
-  title: string;
-  template: string;
-  currentStage: string;
-  progress: number;
-  owner: string;
-  priority: "high" | "medium" | "low";
-  slaStatus: "ontime" | "atrisk" | "overdue";
-  dueDate: string;
+  id: string
+  title: string
+  template: string
+  currentStage: string
+  progress: number
+  owner: string
+  priority: "high" | "medium" | "low"
+  slaStatus: "ontime" | "atrisk" | "overdue"
+  dueDate: string
 }
 
 const mockActiveWorkflows: ActiveWorkflow[] = [
@@ -119,7 +109,7 @@ const mockActiveWorkflows: ActiveWorkflow[] = [
     owner: "Michael Torres",
     priority: "high",
     slaStatus: "ontime",
-    dueDate: "2025-08-31"
+    dueDate: "2025-08-31",
   },
   {
     id: "ACT-002",
@@ -130,7 +120,7 @@ const mockActiveWorkflows: ActiveWorkflow[] = [
     owner: "Sarah Chen",
     priority: "high",
     slaStatus: "atrisk",
-    dueDate: "2025-08-30"
+    dueDate: "2025-08-30",
   },
   {
     id: "ACT-003",
@@ -141,51 +131,69 @@ const mockActiveWorkflows: ActiveWorkflow[] = [
     owner: "Lisa Wang",
     priority: "medium",
     slaStatus: "ontime",
-    dueDate: "2025-09-05"
-  }
-];
+    dueDate: "2025-09-05",
+  },
+]
 
 export function WorkflowManagement() {
-  const [selectedWorkflow, setSelectedWorkflow] = useState<WorkflowTemplate>(mockWorkflows[0]);
-  const [activeTab, setActiveTab] = useState("active");
+  const [selectedWorkflow, setSelectedWorkflow] = useState<WorkflowTemplate>(mockWorkflows[0])
+  const [activeTab, setActiveTab] = useState("active")
 
   const getStageStatusColor = (status: string) => {
     switch (status) {
-      case "completed": return "bg-green-100 text-green-800 border-green-200";
-      case "active": return "bg-blue-100 text-blue-800 border-blue-200";
-      case "pending": return "bg-gray-100 text-gray-600 border-gray-200";
-      case "blocked": return "bg-red-100 text-red-800 border-red-200";
-      default: return "bg-gray-100 text-gray-600 border-gray-200";
+      case "completed":
+        return "bg-green-100 text-green-800 border-green-200"
+      case "active":
+        return "bg-blue-100 text-blue-800 border-blue-200"
+      case "pending":
+        return "bg-gray-100 text-gray-600 border-gray-200"
+      case "blocked":
+        return "bg-red-100 text-red-800 border-red-200"
+      default:
+        return "bg-gray-100 text-gray-600 border-gray-200"
     }
-  };
+  }
 
   const getSLAStatusColor = (status: string) => {
     switch (status) {
-      case "ontime": return "bg-green-100 text-green-800";
-      case "atrisk": return "bg-yellow-100 text-yellow-800";
-      case "overdue": return "bg-red-100 text-red-800";
-      default: return "bg-gray-100 text-gray-800";
+      case "ontime":
+        return "bg-green-100 text-green-800"
+      case "atrisk":
+        return "bg-yellow-100 text-yellow-800"
+      case "overdue":
+        return "bg-red-100 text-red-800"
+      default:
+        return "bg-gray-100 text-gray-800"
     }
-  };
+  }
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
-      case "high": return "bg-red-100 text-red-800";
-      case "medium": return "bg-yellow-100 text-yellow-800";
-      case "low": return "bg-green-100 text-green-800";
-      default: return "bg-gray-100 text-gray-800";
+      case "high":
+        return "bg-red-100 text-red-800"
+      case "medium":
+        return "bg-yellow-100 text-yellow-800"
+      case "low":
+        return "bg-green-100 text-green-800"
+      default:
+        return "bg-gray-100 text-gray-800"
     }
-  };
+  }
 
   const getStageIcon = (status: string) => {
     switch (status) {
-      case "completed": return <CheckCircle className="h-5 w-5 text-green-600" />;
-      case "active": return <PlayCircle className="h-5 w-5 text-blue-600" />;
-      case "pending": return <Clock className="h-5 w-5 text-gray-400" />;
-      case "blocked": return <AlertTriangle className="h-5 w-5 text-red-600" />;
-      default: return <Clock className="h-5 w-5 text-gray-400" />;
+      case "completed":
+        return <CheckCircle className="h-5 w-5 text-green-600" />
+      case "active":
+        return <PlayCircle className="h-5 w-5 text-blue-600" />
+      case "pending":
+        return <Clock className="h-5 w-5 text-gray-400" />
+      case "blocked":
+        return <AlertTriangle className="h-5 w-5 text-red-600" />
+      default:
+        return <Clock className="h-5 w-5 text-gray-400" />
     }
-  };
+  }
 
   return (
     <div className="p-6 space-y-6">
@@ -222,12 +230,13 @@ export function WorkflowManagement() {
                       <p className="text-sm text-muted-foreground">{workflow.template}</p>
                     </div>
                     <div className="flex flex-col items-end space-y-1">
-                      <Badge className={getPriorityColor(workflow.priority)}>
-                        {workflow.priority}
-                      </Badge>
+                      <Badge className={getPriorityColor(workflow.priority)}>{workflow.priority}</Badge>
                       <Badge className={getSLAStatusColor(workflow.slaStatus)}>
-                        {workflow.slaStatus === "ontime" ? "On Time" : 
-                         workflow.slaStatus === "atrisk" ? "At Risk" : "Overdue"}
+                        {workflow.slaStatus === "ontime"
+                          ? "On Time"
+                          : workflow.slaStatus === "atrisk"
+                            ? "At Risk"
+                            : "Overdue"}
                       </Badge>
                     </div>
                   </div>
@@ -256,7 +265,7 @@ export function WorkflowManagement() {
                   </div>
 
                   <div className="flex space-x-2">
-                    <Button variant="outline" size="sm" className="flex-1">
+                    <Button variant="outline" size="sm" className="flex-1 bg-transparent">
                       View Details
                     </Button>
                     <Button size="sm" className="flex-1">
@@ -293,12 +302,8 @@ export function WorkflowManagement() {
                       <h4 className="font-medium text-sm">{template.name}</h4>
                       <p className="text-xs text-muted-foreground">{template.type}</p>
                       <div className="flex items-center justify-between mt-2">
-                        <span className="text-xs text-muted-foreground">
-                          {template.stages.length} stages
-                        </span>
-                        <span className="text-xs text-muted-foreground">
-                          Used {template.usage} times
-                        </span>
+                        <span className="text-xs text-muted-foreground">{template.stages.length} stages</span>
+                        <span className="text-xs text-muted-foreground">Used {template.usage} times</span>
                       </div>
                     </div>
                   ))}
@@ -331,12 +336,10 @@ export function WorkflowManagement() {
                         <Card key={stage.id} className={`p-4 border-2 ${getStageStatusColor(stage.status)}`}>
                           <div className="flex items-start space-x-4">
                             <div className="flex items-center space-x-2">
-                              <span className="text-sm font-medium text-gray-500">
-                                {index + 1}
-                              </span>
+                              <span className="text-sm font-medium text-gray-500">{index + 1}</span>
                               {getStageIcon(stage.status)}
                             </div>
-                            
+
                             <div className="flex-1 space-y-3">
                               <div className="flex items-start justify-between">
                                 <div>
@@ -348,9 +351,7 @@ export function WorkflowManagement() {
                                 <div className="text-right text-sm">
                                   <div className="text-muted-foreground">Due: {stage.dueDate}</div>
                                   {stage.completedDate && (
-                                    <div className="text-green-600">
-                                      Completed: {stage.completedDate}
-                                    </div>
+                                    <div className="text-green-600">Completed: {stage.completedDate}</div>
                                   )}
                                 </div>
                               </div>
@@ -359,12 +360,11 @@ export function WorkflowManagement() {
                               <div className="space-y-1">
                                 <div className="flex justify-between text-xs">
                                   <span>Time Progress</span>
-                                  <span>{stage.timeSpent}h / {stage.sla}h</span>
+                                  <span>
+                                    {stage.timeSpent}h / {stage.sla}h
+                                  </span>
                                 </div>
-                                <Progress 
-                                  value={(stage.timeSpent / stage.sla) * 100} 
-                                  className="h-2" 
-                                />
+                                <Progress value={(stage.timeSpent / stage.sla) * 100} className="h-2" />
                               </div>
 
                               {/* Gatekeepers */}
@@ -456,5 +456,5 @@ export function WorkflowManagement() {
         </TabsContent>
       </Tabs>
     </div>
-  );
+  )
 }

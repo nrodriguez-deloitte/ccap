@@ -1,6 +1,6 @@
-import { Card } from "./ui/card";
-import { Button } from "./ui/button";
-import { Map, MapPin, Layers, Filter } from "lucide-react";
+import { Card } from "../ui/card"
+import { Button } from "../ui/button"
+import { Map, MapPin, Layers, Filter } from "lucide-react"
 
 export function MapView() {
   return (
@@ -84,5 +84,5 @@ export function MapView() {
         </div>
       </div>
     </div>
-  );
+  )
 }

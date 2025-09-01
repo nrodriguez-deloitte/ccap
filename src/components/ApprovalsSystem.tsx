@@ -1,30 +1,31 @@
-import { useState } from "react";
-import { Card } from "./ui/card";
-import { Button } from "./ui/button";
-import { Badge } from "./ui/badge";
-import { Textarea } from "./ui/textarea";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
-import { AlertTriangle, CheckCircle, Clock, User, MessageSquare, Flag, ArrowUp } from "lucide-react";
-import { Progress } from "./ui/progress";
+"use client"
+
+import { useState } from "react"
+import { Card } from "../../components/ui/card"
+import { Button } from "../../components/ui/button"
+import { Badge } from "../../components/ui/badge"
+import { Textarea } from "../../components/ui/textarea"
+import { Progress } from "../../components/ui/progress"
+import { AlertTriangle, CheckCircle, Clock, User, MessageSquare, Flag, ArrowUp } from "lucide-react"
 
 interface ApprovalItem {
-  id: string;
-  title: string;
-  type: string;
-  submittedBy: string;
-  submittedDate: string;
-  status: "pending" | "approved" | "rejected" | "escalated";
-  riskLevel: "low" | "medium" | "high" | "critical";
-  riskFlags: string[];
-  deadline: string;
-  reviewer?: string;
-  progress: number;
+  id: string
+  title: string
+  type: string
+  submittedBy: string
+  submittedDate: string
+  status: "pending" | "approved" | "rejected" | "escalated"
+  riskLevel: "low" | "medium" | "high" | "critical"
+  riskFlags: string[]
+  deadline: string
+  reviewer?: string
+  progress: number
 }
 
 interface RiskFlag {
-  type: "compliance" | "legal" | "financial" | "regulatory";
-  message: string;
-  severity: "low" | "medium" | "high" | "critical";
+  type: "compliance" | "legal" | "financial" | "regulatory"
+  message: string
+  severity: "low" | "medium" | "high" | "critical"
 }
 
 const mockApprovals: ApprovalItem[] = [
@@ -39,7 +40,7 @@ const mockApprovals: ApprovalItem[] = [
     riskFlags: ["Non-standard termination clause", "Above market salary band"],
     deadline: "2025-08-30",
     reviewer: "Michael Torres",
-    progress: 60
+    progress: 60,
   },
   {
     id: "APR-002",
@@ -51,7 +52,7 @@ const mockApprovals: ApprovalItem[] = [
     riskLevel: "high",
     riskFlags: ["Cross-border data transfer", "Inadequate data retention policy"],
     deadline: "2025-08-29",
-    progress: 85
+    progress: 85,
   },
   {
     id: "APR-003",
@@ -64,82 +65,97 @@ const mockApprovals: ApprovalItem[] = [
     riskFlags: [],
     deadline: "2025-09-02",
     reviewer: "Sarah Chen",
-    progress: 100
-  }
-];
+    progress: 100,
+  },
+]
 
 const mockRiskFlags: RiskFlag[] = [
   {
     type: "compliance",
     message: "Document contains non-standard termination clauses that may not comply with local employment law",
-    severity: "medium"
+    severity: "medium",
   },
   {
     type: "financial",
     message: "Proposed salary exceeds approved budget band by 15%",
-    severity: "medium"
+    severity: "medium",
   },
   {
     type: "regulatory",
     message: "Cross-border data transfer provisions require additional GDPR safeguards",
-    severity: "high"
-  }
-];
+    severity: "high",
+  },
+]
 
 export function ApprovalsSystem() {
-  const [selectedApproval, setSelectedApproval] = useState<ApprovalItem | null>(null);
-  const [comments, setComments] = useState("");
+  const [selectedApproval, setSelectedApproval] = useState<ApprovalItem | null>(null)
+  const [comments, setComments] = useState("")
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "pending": return "bg-yellow-100 text-yellow-800";
-      case "approved": return "bg-green-100 text-green-800";
-      case "rejected": return "bg-red-100 text-red-800";
-      case "escalated": return "bg-purple-100 text-purple-800";
-      default: return "bg-gray-100 text-gray-800";
+      case "pending":
+        return "bg-yellow-100 text-yellow-800"
+      case "approved":
+        return "bg-green-100 text-green-800"
+      case "rejected":
+        return "bg-red-100 text-red-800"
+      case "escalated":
+        return "bg-purple-100 text-purple-800"
+      default:
+        return "bg-gray-100 text-gray-800"
     }
-  };
+  }
 
   const getRiskColor = (level: string) => {
     switch (level) {
-      case "low": return "bg-green-100 text-green-800";
-      case "medium": return "bg-yellow-100 text-yellow-800";
-      case "high": return "bg-red-100 text-red-800";
-      case "critical": return "bg-red-200 text-red-900";
-      default: return "bg-gray-100 text-gray-800";
+      case "low":
+        return "bg-green-100 text-green-800"
+      case "medium":
+        return "bg-yellow-100 text-yellow-800"
+      case "high":
+        return "bg-red-100 text-red-800"
+      case "critical":
+        return "bg-red-200 text-red-900"
+      default:
+        return "bg-gray-100 text-gray-800"
     }
-  };
+  }
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {
-      case "low": return "text-green-600";
-      case "medium": return "text-yellow-600";
-      case "high": return "text-red-600";
-      case "critical": return "text-red-800";
-      default: return "text-gray-600";
+      case "low":
+        return "text-green-600"
+      case "medium":
+        return "text-yellow-600"
+      case "high":
+        return "text-red-600"
+      case "critical":
+        return "text-red-800"
+      default:
+        return "text-gray-600"
     }
-  };
+  }
 
   const handleApprove = () => {
     if (selectedApproval) {
       // In a real app, this would make an API call
-      console.log("Approving:", selectedApproval.id);
+      console.log("Approving:", selectedApproval.id)
     }
-  };
+  }
 
   const handleReject = () => {
     if (selectedApproval) {
       // In a real app, this would make an API call
-      console.log("Rejecting:", selectedApproval.id);
+      console.log("Rejecting:", selectedApproval.id)
     }
-  };
+  }
 
   const handleEscalate = () => {
     if (selectedApproval) {
       // In a real app, this would make an API call
-      console.log("Escalating:", selectedApproval.id);
+      console.log("Escalating:", selectedApproval.id)
     }
-  };
+  }
 
   return (
     <div className="p-6 space-y-6">
@@ -171,18 +187,12 @@ export function ApprovalsSystem() {
                         {approval.type} • {approval.submittedBy}
                       </p>
                     </div>
-                    <Badge className={getRiskColor(approval.riskLevel)}>
-                      {approval.riskLevel}
-                    </Badge>
+                    <Badge className={getRiskColor(approval.riskLevel)}>{approval.riskLevel}</Badge>
                   </div>
-                  
+
                   <div className="flex items-center justify-between mb-2">
-                    <Badge className={getStatusColor(approval.status)}>
-                      {approval.status}
-                    </Badge>
-                    <span className="text-xs text-muted-foreground">
-                      Due: {approval.deadline}
-                    </span>
+                    <Badge className={getStatusColor(approval.status)}>{approval.status}</Badge>
+                    <span className="text-xs text-muted-foreground">Due: {approval.deadline}</span>
                   </div>
 
                   <div className="space-y-1">
@@ -214,13 +224,12 @@ export function ApprovalsSystem() {
                   <div>
                     <h2>{selectedApproval.title}</h2>
                     <p className="text-muted-foreground">
-                      {selectedApproval.type} • Submitted by {selectedApproval.submittedBy} on {selectedApproval.submittedDate}
+                      {selectedApproval.type} • Submitted by {selectedApproval.submittedBy} on{" "}
+                      {selectedApproval.submittedDate}
                     </p>
                   </div>
                   <div className="flex space-x-2">
-                    <Badge className={getStatusColor(selectedApproval.status)}>
-                      {selectedApproval.status}
-                    </Badge>
+                    <Badge className={getStatusColor(selectedApproval.status)}>{selectedApproval.status}</Badge>
                     <Badge className={getRiskColor(selectedApproval.riskLevel)}>
                       {selectedApproval.riskLevel} risk
                     </Badge>
@@ -284,10 +293,10 @@ export function ApprovalsSystem() {
                       </>
                     )}
                   </div>
-                  
+
                   <div className="flex space-x-2">
-                    <Button 
-                      variant="outline" 
+                    <Button
+                      variant="outline"
                       onClick={handleEscalate}
                       disabled={selectedApproval.status === "escalated"}
                     >
@@ -320,7 +329,7 @@ export function ApprovalsSystem() {
                       </div>
                     </div>
                   </div>
-                  
+
                   <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
                     <div className="flex items-start space-x-2">
                       <AlertTriangle className="h-4 w-4 text-yellow-600 mt-0.5" />
@@ -338,13 +347,11 @@ export function ApprovalsSystem() {
           ) : (
             <Card className="p-12 text-center">
               <MessageSquare className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-              <p className="text-muted-foreground">
-                Select an approval from the queue to begin review
-              </p>
+              <p className="text-muted-foreground">Select an approval from the queue to begin review</p>
             </Card>
           )}
         </div>
       </div>
     </div>
-  );
+  )
 }

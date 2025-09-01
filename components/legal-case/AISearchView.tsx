@@ -1,11 +1,13 @@
-import { useState } from "react";
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
-import { Card } from "./ui/card";
-import { Search, Sparkles, Zap } from "lucide-react";
+"use client"
+
+import { useState } from "react"
+import { Button } from "../ui/button"
+import { Input } from "../ui/input"
+import { Card } from "../ui/card"
+import { Search, Sparkles, Zap } from "lucide-react"
 
 export function AISearchView() {
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState("")
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-50 flex flex-col items-center justify-center px-6">
@@ -19,12 +21,10 @@ export function AISearchView() {
 
         {/* Main Heading */}
         <div className="space-y-4">
-          <h1 className="text-4xl font-bold text-gray-800 tracking-tight">
-            AI-Powered Search
-          </h1>
+          <h1 className="text-4xl font-bold text-gray-800 tracking-tight">AI-Powered Search</h1>
           <p className="text-lg text-gray-600 max-w-xl mx-auto leading-relaxed">
-            Use natural language to search across all your workflows, documents, 
-            and communications with intelligent AI assistance.
+            Use natural language to search across all your workflows, documents, and communications with intelligent AI
+            assistance.
           </p>
         </div>
 
@@ -52,22 +52,18 @@ export function AISearchView() {
               <Zap className="h-6 w-6 text-purple-600" />
               <h3>Smart Insights</h3>
             </div>
-            <p className="text-sm text-gray-600">
-              Get intelligent summaries and insights from your data
-            </p>
+            <p className="text-sm text-gray-600">Get intelligent summaries and insights from your data</p>
           </Card>
-          
+
           <Card className="p-6 bg-white/70 backdrop-blur-sm border-gray-200">
             <div className="flex items-center space-x-3 mb-3">
               <Search className="h-6 w-6 text-indigo-600" />
               <h3>Contextual Search</h3>
             </div>
-            <p className="text-sm text-gray-600">
-              Find exactly what you need with context-aware search
-            </p>
+            <p className="text-sm text-gray-600">Find exactly what you need with context-aware search</p>
           </Card>
         </div>
       </div>
     </div>
-  );
+  )
 }

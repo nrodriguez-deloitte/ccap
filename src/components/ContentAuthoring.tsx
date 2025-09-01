@@ -1,29 +1,30 @@
-import { useState } from "react";
-import { Card } from "./ui/card";
-import { Button } from "./ui/button";
-import { Textarea } from "./ui/textarea";
-import { Input } from "./ui/input";
-import { Badge } from "./ui/badge";
-import { Separator } from "./ui/separator";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
-import { ScrollArea } from "./ui/scroll-area";
-import { Search, Plus, BookOpen, Scale, FileText, Quote, Save, Send } from "lucide-react";
+"use client"
+
+import { useState } from "react"
+import { Card } from "../../components/ui/card"
+import { Button } from "../../components/ui/button"
+import { Textarea } from "../../components/ui/textarea"
+import { Input } from "../../components/ui/input"
+import { Badge } from "../../components/ui/badge"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../components/ui/tabs"
+import { ScrollArea } from "../../components/ui/scroll-area"
+import { Search, Plus, BookOpen, Scale, FileText, Save, Send } from "lucide-react"
 
 interface Citation {
-  id: string;
-  source: string;
-  type: "precedent" | "legislation" | "policy";
-  reference: string;
-  relevance: number;
+  id: string
+  source: string
+  type: "precedent" | "legislation" | "policy"
+  reference: string
+  relevance: number
 }
 
 interface PrecedentItem {
-  id: string;
-  title: string;
-  court: string;
-  year: string;
-  relevance: number;
-  summary: string;
+  id: string
+  title: string
+  court: string
+  year: string
+  relevance: number
+  summary: string
 }
 
 const mockCitations: Citation[] = [
@@ -32,23 +33,23 @@ const mockCitations: Citation[] = [
     source: "Employment Rights Act 1996",
     type: "legislation",
     reference: "Section 94",
-    relevance: 95
+    relevance: 95,
   },
   {
-    id: "2", 
+    id: "2",
     source: "Smith v. Jones Ltd",
     type: "precedent",
     reference: "[2023] EWCA Civ 123",
-    relevance: 88
+    relevance: 88,
   },
   {
     id: "3",
     source: "Company HR Policy Manual",
-    type: "policy", 
+    type: "policy",
     reference: "Section 4.2.1",
-    relevance: 76
-  }
-];
+    relevance: 76,
+  },
+]
 
 const mockPrecedents: PrecedentItem[] = [
   {
@@ -57,7 +58,8 @@ const mockPrecedents: PrecedentItem[] = [
     court: "Court of Appeal",
     year: "2023",
     relevance: 88,
-    summary: "Established precedent for constructive dismissal in cases involving fundamental changes to employment terms..."
+    summary:
+      "Established precedent for constructive dismissal in cases involving fundamental changes to employment terms...",
   },
   {
     id: "2",
@@ -65,7 +67,7 @@ const mockPrecedents: PrecedentItem[] = [
     court: "Employment Tribunal",
     year: "2024",
     relevance: 82,
-    summary: "Ruling on reasonable adjustments for remote working arrangements under disability discrimination law..."
+    summary: "Ruling on reasonable adjustments for remote working arrangements under disability discrimination law...",
   },
   {
     id: "3",
@@ -73,34 +75,38 @@ const mockPrecedents: PrecedentItem[] = [
     court: "High Court",
     year: "2023",
     relevance: 75,
-    summary: "Interpretation of garden leave clauses and their enforceability in senior executive contracts..."
-  }
-];
+    summary: "Interpretation of garden leave clauses and their enforceability in senior executive contracts...",
+  },
+]
 
 export function ContentAuthoring() {
-  const [content, setContent] = useState("");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCitations, setSelectedCitations] = useState<Citation[]>([]);
-  const [reasoning, setReasoning] = useState("");
+  const [content, setContent] = useState("")
+  const [searchQuery, setSearchQuery] = useState("")
+  const [selectedCitations, setSelectedCitations] = useState<Citation[]>([])
+  const [reasoning, setReasoning] = useState("")
 
   const addCitation = (citation: Citation) => {
-    if (!selectedCitations.find(c => c.id === citation.id)) {
-      setSelectedCitations([...selectedCitations, citation]);
+    if (!selectedCitations.find((c) => c.id === citation.id)) {
+      setSelectedCitations([...selectedCitations, citation])
     }
-  };
+  }
 
   const removeCitation = (citationId: string) => {
-    setSelectedCitations(selectedCitations.filter(c => c.id !== citationId));
-  };
+    setSelectedCitations(selectedCitations.filter((c) => c.id !== citationId))
+  }
 
   const getTypeColor = (type: string) => {
     switch (type) {
-      case "precedent": return "bg-blue-100 text-blue-800";
-      case "legislation": return "bg-green-100 text-green-800";
-      case "policy": return "bg-purple-100 text-purple-800";
-      default: return "bg-gray-100 text-gray-800";
+      case "precedent":
+        return "bg-blue-100 text-blue-800"
+      case "legislation":
+        return "bg-green-100 text-green-800"
+      case "policy":
+        return "bg-purple-100 text-purple-800"
+      default:
+        return "bg-gray-100 text-gray-800"
     }
-  };
+  }
 
   return (
     <div className="p-6 space-y-6">
@@ -129,21 +135,21 @@ export function ContentAuthoring() {
                   </Button>
                 </div>
               </div>
-              
+
               <Textarea
                 placeholder="Begin drafting your legal content here. Use AI suggestions and precedent libraries to enhance your work..."
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
                 className="min-h-[400px] resize-none"
               />
-              
+
               {/* Citations Bar */}
               {selectedCitations.length > 0 && (
                 <div className="space-y-2">
                   <h4>Selected Citations</h4>
                   <div className="flex flex-wrap gap-2">
                     {selectedCitations.map((citation) => (
-                      <Badge 
+                      <Badge
                         key={citation.id}
                         className={`${getTypeColor(citation.type)} cursor-pointer hover:opacity-80`}
                         onClick={() => removeCitation(citation.id)}
@@ -219,19 +225,19 @@ export function ContentAuthoring() {
                             {precedent.relevance}% match
                           </Badge>
                         </div>
-                        <p className="text-xs text-muted-foreground mb-2">
-                          {precedent.summary}
-                        </p>
-                        <Button 
-                          size="sm" 
-                          variant="outline" 
-                          onClick={() => addCitation({
-                            id: precedent.id,
-                            source: precedent.title,
-                            type: "precedent",
-                            reference: `[${precedent.year}]`,
-                            relevance: precedent.relevance
-                          })}
+                        <p className="text-xs text-muted-foreground mb-2">{precedent.summary}</p>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() =>
+                            addCitation({
+                              id: precedent.id,
+                              source: precedent.title,
+                              type: "precedent",
+                              reference: `[${precedent.year}]`,
+                              relevance: precedent.relevance,
+                            })
+                          }
                         >
                           <Plus className="h-3 w-3 mr-1" />
                           Cite
@@ -250,16 +256,18 @@ export function ContentAuthoring() {
                       <p className="text-xs text-muted-foreground mb-2">
                         Section 94: The right not to be unfairly dismissed
                       </p>
-                      <Button 
-                        size="sm" 
+                      <Button
+                        size="sm"
                         variant="outline"
-                        onClick={() => addCitation({
-                          id: "leg1",
-                          source: "Employment Rights Act 1996",
-                          type: "legislation",
-                          reference: "Section 94",
-                          relevance: 95
-                        })}
+                        onClick={() =>
+                          addCitation({
+                            id: "leg1",
+                            source: "Employment Rights Act 1996",
+                            type: "legislation",
+                            reference: "Section 94",
+                            relevance: 95,
+                          })
+                        }
                       >
                         <Plus className="h-3 w-3 mr-1" />
                         Cite
@@ -270,16 +278,18 @@ export function ContentAuthoring() {
                       <p className="text-xs text-muted-foreground mb-2">
                         Section 20: Duty to make reasonable adjustments
                       </p>
-                      <Button 
-                        size="sm" 
+                      <Button
+                        size="sm"
                         variant="outline"
-                        onClick={() => addCitation({
-                          id: "leg2",
-                          source: "Equality Act 2010",
-                          type: "legislation", 
-                          reference: "Section 20",
-                          relevance: 89
-                        })}
+                        onClick={() =>
+                          addCitation({
+                            id: "leg2",
+                            source: "Equality Act 2010",
+                            type: "legislation",
+                            reference: "Section 20",
+                            relevance: 89,
+                          })
+                        }
                       >
                         <Plus className="h-3 w-3 mr-1" />
                         Cite
@@ -297,16 +307,18 @@ export function ContentAuthoring() {
                       <p className="text-xs text-muted-foreground mb-2">
                         Section 4.2.1: Disciplinary procedures and fair process
                       </p>
-                      <Button 
-                        size="sm" 
+                      <Button
+                        size="sm"
                         variant="outline"
-                        onClick={() => addCitation({
-                          id: "pol1",
-                          source: "HR Policy Manual",
-                          type: "policy",
-                          reference: "Section 4.2.1",
-                          relevance: 76
-                        })}
+                        onClick={() =>
+                          addCitation({
+                            id: "pol1",
+                            source: "HR Policy Manual",
+                            type: "policy",
+                            reference: "Section 4.2.1",
+                            relevance: 76,
+                          })
+                        }
                       >
                         <Plus className="h-3 w-3 mr-1" />
                         Cite
@@ -320,5 +332,5 @@ export function ContentAuthoring() {
         </div>
       </div>
     </div>
-  );
+  )
 }

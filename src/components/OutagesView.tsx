@@ -1,21 +1,25 @@
-import { useState } from "react";
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
-import { Search } from "lucide-react";
+"use client"
+
+import type React from "react"
+
+import { useState } from "react"
+import { Button } from "../../components/ui/button"
+import { Input } from "../../components/ui/input"
+import { Search } from "lucide-react"
 
 export function OutagesView() {
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState("")
 
   const handleSearch = () => {
-    console.log("Searching for:", searchQuery);
+    console.log("Searching for:", searchQuery)
     // In a real app, this would trigger the AI search functionality
-  };
+  }
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      handleSearch();
+    if (e.key === "Enter") {
+      handleSearch()
     }
-  };
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-blue-50 to-purple-50 flex flex-col items-center justify-center px-6">
@@ -33,19 +37,22 @@ export function OutagesView() {
               </div>
             </div>
             {/* Orbital rings */}
-            <div className="absolute inset-0 rounded-full border-2 border-blue-300/30 animate-spin" style={{ animationDuration: '10s' }}></div>
-            <div className="absolute inset-2 rounded-full border border-green-400/40 animate-spin" style={{ animationDuration: '8s', animationDirection: 'reverse' }}></div>
+            <div
+              className="absolute inset-0 rounded-full border-2 border-blue-300/30 animate-spin"
+              style={{ animationDuration: "10s" }}
+            ></div>
+            <div
+              className="absolute inset-2 rounded-full border border-green-400/40 animate-spin"
+              style={{ animationDuration: "8s", animationDirection: "reverse" }}
+            ></div>
           </div>
         </div>
 
         {/* Main Heading */}
         <div className="space-y-4">
-          <h1 className="text-4xl font-bold text-gray-800 tracking-tight">
-            Explore network outages
-          </h1>
+          <h1 className="text-4xl font-bold text-gray-800 tracking-tight">Explore network outages</h1>
           <p className="text-lg text-gray-600 max-w-xl mx-auto leading-relaxed">
-            Use AI to find details on both open and resolved outages, along with 
-            associated communication notifications.
+            Use AI to find details on both open and resolved outages, along with associated communication notifications.
           </p>
         </div>
 
@@ -70,22 +77,22 @@ export function OutagesView() {
 
         {/* Quick Action Suggestions */}
         <div className="flex flex-wrap justify-center gap-3 mt-8">
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             className="rounded-full bg-white/70 backdrop-blur-sm border-gray-200 hover:bg-white/90 transition-all duration-200"
             onClick={() => setSearchQuery("Show me current outages")}
           >
             Current outages
           </Button>
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             className="rounded-full bg-white/70 backdrop-blur-sm border-gray-200 hover:bg-white/90 transition-all duration-200"
             onClick={() => setSearchQuery("Outages in the last 24 hours")}
           >
             Recent outages
           </Button>
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             className="rounded-full bg-white/70 backdrop-blur-sm border-gray-200 hover:bg-white/90 transition-all duration-200"
             onClick={() => setSearchQuery("Critical infrastructure status")}
           >
@@ -110,5 +117,5 @@ export function OutagesView() {
         </div>
       </div>
     </div>
-  );
+  )
 }
