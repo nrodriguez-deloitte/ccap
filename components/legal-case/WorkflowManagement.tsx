@@ -2,7 +2,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui
 import { Button } from "../ui/button"
 import { Badge } from "../ui/badge"
 
-export default function WorkflowManagement() {
+export function WorkflowManagement() {
   return (
     <div className="space-y-6">
       <div>

@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card"
 
-export default function Dashboard() {
+export function Dashboard() {
   return (
     <div className="space-y-6">
       <div>

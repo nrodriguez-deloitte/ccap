@@ -1,6 +1,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card"
 
-export default function OutagesView() {
+export function OutagesView() {
   return (
     <div className="space-y-6">
       <div>
