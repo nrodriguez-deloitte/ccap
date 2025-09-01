@@ -1,11 +1,11 @@
 "use client"
 
 import { useState } from "react"
-import { Card } from "../../components/ui/card"
-import { Button } from "../../components/ui/button"
-import { Badge } from "../../components/ui/badge"
-import { Textarea } from "../../components/ui/textarea"
-import { Progress } from "../../components/ui/progress"
+import { Card } from "../ui/card"
+import { Button } from "../ui/button"
+import { Badge } from "../ui/badge"
+import { Textarea } from "../ui/textarea"
+import { Progress } from "../ui/progress"
 import { AlertTriangle, CheckCircle, Clock, User, MessageSquare, Flag, ArrowUp } from "lucide-react"
 
 interface ApprovalItem {
@@ -87,7 +87,7 @@ const mockRiskFlags: RiskFlag[] = [
   },
 ]
 
-export function ApprovalsSystem() {
+function ApprovalsSystem() {
   const [selectedApproval, setSelectedApproval] = useState<ApprovalItem | null>(null)
   const [comments, setComments] = useState("")
 
@@ -355,3 +355,5 @@ export function ApprovalsSystem() {
     </div>
   )
 }
+
+export { ApprovalsSystem }
