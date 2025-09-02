@@ -1,0 +1,190 @@
+// Outage Dashboard (Forge + JSM) – ER Diagram
+// Format: DBML (https://dbml.dbdiagram.io/docs)
+
+Table outages {
+  key varchar [primary key, note: 'JSM issue key e.g., IM-123']
+  summary varchar
+  description text
+  severity varchar [note: 'enum: Minor | Significant | Major | Critical']
+  stage varchar [note: 'enum: Stage 1 | Stage 2 | Stage 3']
+  status varchar [note: 'Active | Monitoring | Resolved or map to workflow']
+  detected_at timestamp
+  identified_at timestamp
+  eta_restore timestamp
+  resolved_at timestamp
+  updated_at timestamp
+  affected_customers integer
+  affected_services integer
+  impact_bucket varchar [note: '<10k | 10–50k | 50k+ (derived)']
+  acma_category varchar
+  risk_score integer [note: '0–100 (derived)']
+  latitude float
+  longitude float
+  location_label varchar
+  slo_policy_id varchar [ref: > slo_policies.id]
+
+  Indexes {
+    identified_at
+    (severity, stage)
+    status
+  }
+}
+
+Table outage_events {
+  id varchar [primary key]
+  outage_key varchar [not null, ref: > outages.key]
+  type varchar [note: 'Identified | UpdateIssued | CommsSent | AwaitingNextUpdate | Resolved | StageChanged']
+  at timestamp
+  severity_at varchar
+  stage_at varchar
+  impacted_customers integer
+  due_next_update_at timestamp
+}
+
+Table services {
+  id varchar [primary key]
+  name varchar
+  product_line varchar
+  criticality varchar
+  owning_team varchar
+  sla_targets varchar
+}
+
+Table assets {
+  id varchar [primary key]
+  type varchar [note: 'Node | Exchange | Fibre | POP | ...']
+  vendor varchar
+  model varchar
+  capacity integer
+  status varchar
+  site_id varchar [ref: > sites.id]
+}
+
+Table sites {
+  id varchar [primary key]
+  name varchar
+  lat float
+  lng float
+  address varchar
+  classification varchar [note: 'Metro | Regional | Remote']
+  region_id varchar [ref: > regions.id]
+}
+
+Table regions {
+  id varchar [primary key]
+  name varchar
+  code varchar
+  parent_id varchar [ref: > regions.id, note: 'self-referencing hierarchy']
+}
+
+Table segments {
+  id varchar [primary key]
+  name varchar
+  definition text [note: 'filter expression / audience rule']
+  channel_prefs varchar
+}
+
+Table communication_templates {
+  id varchar [primary key]
+  name varchar
+  channel varchar [note: 'Email | SMS | SpatialBuzz | ServiceNow | API']
+  subject varchar
+  body text
+  placeholders_json text
+  locale varchar
+  version varchar
+  status varchar [note: 'Active | Archived']
+  owner varchar
+  approver varchar
+}
+
+Table communication_jobs {
+  id varchar [primary key]
+  outage_key varchar [not null, ref: > outages.key]
+  template_id varchar [not null, ref: > communication_templates.id]
+  channel varchar
+  schedule_at timestamp
+  sent_at timestamp
+  status varchar [note: 'Draft | Scheduled | Sent | Failed']
+  audience_id varchar [note: 'Segment id or ad-hoc reference']
+  rendered_body text
+  sent integer
+  delivered integer
+  failed integer
+  opens integer
+  clicks integer
+}
+
+Table compliance_statuses {
+  id varchar [primary key]
+  outage_key varchar [not null, ref: > outages.key]
+  channel varchar
+  required boolean
+  due_by timestamp
+  sent_at timestamp
+  status varchar [note: 'Ok | Pending | Exceeded SLO | Not Required']
+  delta_seconds integer [note: 'sent_at - due_by (sec)']
+}
+
+Table slo_policies {
+  id varchar [primary key]
+  name varchar
+  rules_json text [note: 'array of {trigger, channel, severityMin, stageMin, dueWithin, required}']
+  notes text
+}
+
+Table report_snapshots {
+  id varchar [primary key]
+  period_start timestamp
+  period_end timestamp
+  granularity varchar [note: 'hour | day | week']
+  aggregates_json text [note: 'countsBy*, MTTR, SLA %, breaches, root causes']
+  generated_at timestamp
+  parameters_json text
+}
+
+// Many-to-many link tables
+Table outage_services {
+  outage_key varchar [not null, ref: > outages.key]
+  service_id varchar [not null, ref: > services.id]
+  Note: 'Outage impacts Service'
+  indexes {
+    (outage_key, service_id) [unique]
+  }
+}
+
+Table outage_assets {
+  outage_key varchar [not null, ref: > outages.key]
+  asset_id varchar [not null, ref: > assets.id]
+  indexes {
+    (outage_key, asset_id) [unique]
+  }
+}
+
+Table outage_sites {
+  outage_key varchar [not null, ref: > outages.key]
+  site_id varchar [not null, ref: > sites.id]
+  indexes {
+    (outage_key, site_id) [unique]
+  }
+}
+
+Table outage_segments {
+  outage_key varchar [not null, ref: > outages.key]
+  segment_id varchar [not null, ref: > segments.id]
+  indexes {
+    (outage_key, segment_id) [unique]
+  }
+}
+
+Table asset_services {
+  asset_id varchar [not null, ref: > assets.id]
+  service_id varchar [not null, ref: > services.id]
+  Note: 'Service delivered by Asset (N:N)'
+  indexes {
+    (asset_id, service_id) [unique]
+  }
+}
+
+// Relationships are declared inline using column-level [ref: > ...] annotations above.
+// Explicit Ref: lines were removed to avoid duplicate-endpoint errors in dbdiagram.

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Outage Dashboard</title>
+  <link rel="stylesheet" href="./styles.css?v=20250813-1" />
+  <!-- Optional local Leaflet assets (no external egress). Drop files under vendor/leaflet to enable. -->
+  <link rel="stylesheet" href="./vendor/leaflet/leaflet.css?v=20250813-1" />
+  </head>
+  <body>
+    <div id="app"></div>
+  <script>
+    // Minimal bridge wrapper using the Forge UMD global provided in Custom UI
+    window.forgeInvoke = async function(action, params){
+      try {
+        // Use the resolver pattern that matches our manifest
+        if (typeof window.invoke === 'function') {
+          return await window.invoke('resolver', { action, params });
+        }
+        return { ok:false, error: 'Bridge invoke not available' };
+      } catch (e) {
+        return { ok:false, error: String(e) };
+      }
+    }
+    // Optional: allow JQL override via global or querystring for testing
+    try {
+      const usp = new URLSearchParams(location.search);
+      if (usp.get('jql')) window.FORGE_JQL = usp.get('jql');
+  // Enable optional diagnostics in chat via ?diag=1
+  const diag = usp.get('diag');
+  if (diag === '1' || diag === 'true') window.FORGE_DIAG = true; else window.FORGE_DIAG = false;
+    } catch {}
+  </script>
+  <!-- Expose @forge/bridge invoke on window for environments where UMD is not present -->
+  <script src="./vendor/forge-bridge.js?v=20250820-3"></script>
+  <script src="./vendor/leaflet/leaflet.js?v=20250820-3"></script>
+  <script src="./main.js?v=20250820-3"></script>
+  </body>
+</html>
