@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: "v0 App",
+  title: "CCAP - Content Co-authoring Assurance Platform",
   description: "Created with v0",
   generator: "v0.app",
 }
