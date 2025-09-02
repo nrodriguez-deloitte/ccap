@@ -58,7 +58,7 @@ export function TemplatesView() {
   const [editRequestFilter, setEditRequestFilter] = useState("all")
 
   return (
-    <div className="space-y-6 p-6">
+    <div className="space-y-6 p-6 bg-gray-50 min-h-screen">
       {/* Header Section */}
       <div className="space-y-2">
         <h1 className="text-3xl font-bold text-gray-900">Templates Management</h1>

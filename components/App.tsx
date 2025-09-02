@@ -79,7 +79,7 @@ export default function App() {
   return (
     <div className="h-screen bg-white flex flex-col">
       <TopNavigation activeView={activeView} onViewChange={handleViewChange} />
-      <main className="flex-1 overflow-y-auto">{renderActiveView()}</main>
+      <main className="flex-1 overflow-y-auto pb-5">{renderActiveView()}</main>
     </div>
   )
 }

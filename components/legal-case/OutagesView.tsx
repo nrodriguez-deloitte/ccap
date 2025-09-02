@@ -2,7 +2,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui
 
 export function OutagesView() {
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 p-6 bg-gray-50 min-h-screen">
       <div>
         <h2 className="text-3xl font-bold tracking-tight">System Outages</h2>
         <p className="text-muted-foreground">Monitor and track system outages and service disruptions</p>

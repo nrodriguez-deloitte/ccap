@@ -155,7 +155,7 @@ Customer Service Team`,
   ]
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 bg-gray-50 min-h-screen">
       <div className="px-6 py-4 space-y-6">
         <div>
           <h2 className="text-3xl font-bold tracking-tight text-gray-900">Outage Communication Management</h2>
