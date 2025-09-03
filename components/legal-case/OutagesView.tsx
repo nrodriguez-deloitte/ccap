@@ -109,8 +109,8 @@ export function OutagesView() {
   return (
     <div className="bg-gray-50 min-h-screen">
       <div className="px-6">
-        <h1 className="text-2xl font-bold text-gray-900">Outage Communication Records</h1>
-        <p className="text-gray-600 mt-1">
+        <h1 className="text-2xl font-bold text-gray-900 mt-4">Outage Communication Records</h1>
+        <p className="text-gray-600 mt-1 mb-4">
           Filter, find and extract notification records sent to customers during an outage
         </p>
       </div>
