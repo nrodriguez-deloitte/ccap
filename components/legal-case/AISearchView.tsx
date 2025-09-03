@@ -1,13 +1,59 @@
 "use client"
 
+import type React from "react"
+
 import { useState } from "react"
 import { Button } from "../ui/button"
 import { Input } from "../ui/input"
 import { Card, CardContent } from "../ui/card"
 import { Search, Sparkles, MessageSquare, FileText, Users, Calendar } from "lucide-react"
+import AiChat from "../AiChat"
 
 export function AISearchView() {
   const [searchQuery, setSearchQuery] = useState("")
+  const [showChat, setShowChat] = useState(false)
+  const [initialQuery, setInitialQuery] = useState<string | undefined>()
+
+  const handleSearch = () => {
+    if (searchQuery.trim()) {
+      setInitialQuery(searchQuery)
+      setShowChat(true)
+    }
+  }
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      handleSearch()
+    }
+  }
+
+  if (showChat) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex items-center justify-between p-6 border-b bg-white">
+            <div>
+              <h1 className="text-2xl font-bold text-foreground">AI Search</h1>
+              <p className="text-muted-foreground">Intelligent outage analysis and insights</p>
+            </div>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setShowChat(false)
+                setSearchQuery("")
+                setInitialQuery(undefined)
+              }}
+            >
+              Back to Search
+            </Button>
+          </div>
+          <div className="p-6">
+            <AiChat initialQuery={initialQuery} />
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
@@ -87,9 +133,11 @@ export function AISearchView() {
                   placeholder="Ask me anything about your work..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyPress={handleKeyPress}
                   className="w-full pl-4 pr-12 py-4 text-lg rounded-full border-2 border-border focus:border-primary focus:ring-4 focus:ring-primary/20 bg-background shadow-sm"
                 />
                 <Button
+                  onClick={handleSearch}
                   className="absolute right-2 top-1/2 transform -translate-y-1/2 rounded-full w-10 h-10 bg-primary hover:bg-primary/90"
                   size="sm"
                 >
