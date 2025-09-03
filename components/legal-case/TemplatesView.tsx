@@ -1,21 +1,27 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Button } from "../ui/button"
-import { Input } from "../ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select"
-import { Badge } from "../ui/badge"
-import { Search } from "lucide-react"
+import { useState } from "react";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
+import { Badge } from "../ui/badge";
+import { Search } from "lucide-react";
 
 interface Template {
-  id: string
-  name: string
-  type: string
-  lastUpdated: string
-  status: string
-  editRequest: string | null
-  version: string
-  actionType: "request" | "locked"
+  id: string;
+  name: string;
+  type: string;
+  lastUpdated: string;
+  status: string;
+  editRequest: string | null;
+  version: string;
+  actionType: "request" | "locked";
 }
 
 const templatesData: Template[] = [
@@ -49,24 +55,29 @@ const templatesData: Template[] = [
     version: "v1.9",
     actionType: "request",
   },
-]
+];
 
 export function TemplatesView() {
-  const [searchTerm, setSearchTerm] = useState("")
-  const [typeFilter, setTypeFilter] = useState("all")
-  const [statusFilter, setStatusFilter] = useState("all")
-  const [editRequestFilter, setEditRequestFilter] = useState("all")
+  const [searchTerm, setSearchTerm] = useState("");
+  const [typeFilter, setTypeFilter] = useState("all");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [editRequestFilter, setEditRequestFilter] = useState("all");
 
   return (
     <div className="space-y-6 p-6 bg-gray-50 min-h-screen">
       {/* Header Section */}
       <div className="space-y-2">
-        <h1 className="text-3xl font-bold text-gray-900">Templates Management</h1>
-        <p className="text-gray-600">Manage notification and outage templates. Submit edit requests for approval.</p>
+        <h1 className="text-3xl font-bold text-gray-900">
+          Templates Management
+        </h1>
+        <p className="text-gray-600">
+          Manage notification and outage templates. Submit edit requests for
+          approval.
+        </p>
       </div>
 
       {/* Filters Section */}
-      <div className="bg-white rounded-lg border border-gray-200 p-6">
+      <div className="bg-white rounded-lg border border-gray-200 p-4">
         <div className="flex flex-wrap gap-4 items-end">
           <div className="flex-1 min-w-[200px]">
             <div className="relative">
@@ -102,7 +113,9 @@ export function TemplatesView() {
             </SelectContent>
           </Select>
 
-          <Select value={editRequestFilter} onValueChange={setEditRequestFilter}>
+          <Select
+            value={editRequestFilter}
+            onValueChange={setEditRequestFilter}>
             <SelectTrigger className="w-[160px] border-gray-300 focus:border-blue-500 focus:ring-blue-500">
               <SelectValue placeholder="All Edit Requests" />
             </SelectTrigger>
@@ -113,7 +126,9 @@ export function TemplatesView() {
             </SelectContent>
           </Select>
 
-          <Button className="bg-gray-900 hover:bg-gray-800 text-white px-6 cursor-pointer">Apply filters</Button>
+          <Button className="bg-gray-900 hover:bg-gray-800 text-white px-6 cursor-pointer">
+            Apply filters
+          </Button>
         </div>
       </div>
 
@@ -123,35 +138,60 @@ export function TemplatesView() {
           <table className="w-full">
             <thead className="bg-gray-50 border-b border-gray-200">
               <tr>
-                <th className="px-6 py-4 text-left text-sm font-medium text-gray-600">Template Name</th>
-                <th className="px-6 py-4 text-left text-sm font-medium text-gray-600">Type</th>
-                <th className="px-6 py-4 text-left text-sm font-medium text-gray-600">Last Updated</th>
-                <th className="px-6 py-4 text-left text-sm font-medium text-gray-600">Status</th>
-                <th className="px-6 py-4 text-left text-sm font-medium text-gray-600">Edit Request</th>
-                <th className="px-6 py-4 text-left text-sm font-medium text-gray-600">Version</th>
-                <th className="px-6 py-4 text-left text-sm font-medium text-gray-600">Actions</th>
+                <th className="px-6 py-4 text-left text-sm font-medium text-gray-600">
+                  Template Name
+                </th>
+                <th className="px-6 py-4 text-left text-sm font-medium text-gray-600">
+                  Type
+                </th>
+                <th className="px-6 py-4 text-left text-sm font-medium text-gray-600">
+                  Last Updated
+                </th>
+                <th className="px-6 py-4 text-left text-sm font-medium text-gray-600">
+                  Status
+                </th>
+                <th className="px-6 py-4 text-left text-sm font-medium text-gray-600">
+                  Edit Request
+                </th>
+                <th className="px-6 py-4 text-left text-sm font-medium text-gray-600">
+                  Version
+                </th>
+                <th className="px-6 py-4 text-left text-sm font-medium text-gray-600">
+                  Actions
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
               {templatesData.map((template) => (
                 <tr key={template.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 text-sm font-medium text-gray-900">{template.name}</td>
-                  <td className="px-6 py-4 text-sm text-gray-600">{template.type}</td>
-                  <td className="px-6 py-4 text-sm text-gray-600">{template.lastUpdated}</td>
+                  <td className="px-6 py-4 text-sm font-medium text-gray-900">
+                    {template.name}
+                  </td>
+                  <td className="px-6 py-4 text-sm text-gray-600">
+                    {template.type}
+                  </td>
+                  <td className="px-6 py-4 text-sm text-gray-600">
+                    {template.lastUpdated}
+                  </td>
                   <td className="px-6 py-4">
-                    <Badge variant="secondary" className="bg-red-100 text-red-800 hover:bg-red-100">
+                    <Badge
+                      variant="secondary"
+                      className="bg-red-100 text-red-800 hover:bg-red-100">
                       {template.status}
                     </Badge>
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-600">{template.editRequest || "—"}</td>
-                  <td className="px-6 py-4 text-sm text-gray-600">{template.version}</td>
+                  <td className="px-6 py-4 text-sm text-gray-600">
+                    {template.editRequest || "—"}
+                  </td>
+                  <td className="px-6 py-4 text-sm text-gray-600">
+                    {template.version}
+                  </td>
                   <td className="px-6 py-4">
                     {template.actionType === "request" ? (
                       <Button
                         variant="outline"
                         size="sm"
-                        className="border-gray-300 text-gray-700 hover:bg-gray-50 cursor-pointer bg-transparent"
-                      >
+                        className="border-gray-300 text-gray-700 hover:bg-gray-50 cursor-pointer bg-transparent">
                         Request Edit
                       </Button>
                     ) : (
@@ -159,8 +199,7 @@ export function TemplatesView() {
                         variant="outline"
                         size="sm"
                         disabled
-                        className="border-gray-300 text-gray-400 cursor-not-allowed bg-transparent"
-                      >
+                        className="border-gray-300 text-gray-400 cursor-not-allowed bg-transparent">
                         Edit Locked
                       </Button>
                     )}
@@ -172,5 +211,5 @@ export function TemplatesView() {
         </div>
       </div>
     </div>
-  )
+  );
 }
