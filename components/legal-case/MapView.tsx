@@ -302,7 +302,7 @@ export function MapView() {
 
   return (
     <div className="bg-gray-50 min-h-screen pb-5">
-      <div className="px-6 py-4">
+      <div className="px-6 py-6">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-3xl font-bold text-gray-900">
             Current unplanned outages
@@ -312,7 +312,7 @@ export function MapView() {
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
           {stats.map((stat, index) => (
-            <Card key={index}>
+            <Card key={index} className="py-4">
               <CardContent className="px-6 text-center">
                 <div className="text-3xl font-bold text-gray-900 mb-2">
                   {stat.value}
@@ -391,7 +391,7 @@ export function MapView() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {filteredOutages.map((outage) => (
-            <Card key={outage.id} className="shadow-sm">
+            <Card key={outage.id} className="shadow-sm py-4">
               <CardContent className="px-4">
                 <div className="mb-3">
                   <div className="flex items-start justify-between mb-2">
