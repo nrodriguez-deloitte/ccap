@@ -1,26 +1,13 @@
-"use client";
+"use client"
 
-import { useState, useRef } from "react";
-import { Card, CardContent } from "../ui/card";
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "../ui/table";
-import { Badge } from "../ui/badge";
-import { CheckCircle, AlertTriangle } from "lucide-react";
+import { useState, useRef } from "react"
+import { Card, CardContent } from "../ui/card"
+import { Button } from "../ui/button"
+import { Input } from "../ui/input"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table"
+import { Badge } from "../ui/badge"
+import { CheckCircle, AlertTriangle } from "lucide-react"
 
 const outageData = [
   {
@@ -65,7 +52,7 @@ const outageData = [
     date: "09:10 02/02/2025",
     consumers: "9,500",
   },
-];
+]
 
 const stageData = [
   {
@@ -120,47 +107,47 @@ const stageData = [
       { type: "ServiceNow", status: "Sent", icon: "check" },
     ],
   },
-];
+]
 
 export function RecordsView() {
-  const [selectedOutage, setSelectedOutage] = useState<string | null>(null);
-  const [showDetails, setShowDetails] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const detailsRef = useRef<HTMLDivElement>(null);
+  const [selectedOutage, setSelectedOutage] = useState<string | null>(null)
+  const [showDetails, setShowDetails] = useState(false)
+  const [currentPage, setCurrentPage] = useState(1)
+  const detailsRef = useRef<HTMLDivElement>(null)
 
   const handleViewClick = (outageId: string) => {
-    setSelectedOutage(outageId);
-    setShowDetails(true);
+    setSelectedOutage(outageId)
+    setShowDetails(true)
     setTimeout(() => {
       detailsRef.current?.scrollIntoView({
         behavior: "smooth",
         block: "start",
-      });
-    }, 100);
-  };
+      })
+    }, 100)
+  }
 
-  const itemsPerPage = 5;
-  const totalItems = outageData.length;
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const displayedOutages = outageData.slice(startIndex, endIndex);
-  const displayStart = startIndex + 1;
-  const displayEnd = Math.min(endIndex, totalItems);
+  const itemsPerPage = 5
+  const totalItems = outageData.length
+  const totalPages = Math.ceil(totalItems / itemsPerPage)
+  const startIndex = (currentPage - 1) * itemsPerPage
+  const endIndex = startIndex + itemsPerPage
+  const displayedOutages = outageData.slice(startIndex, endIndex)
+  const displayStart = startIndex + 1
+  const displayEnd = Math.min(endIndex, totalItems)
 
   const handlePrevious = () => {
     if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-      setShowDetails(false);
+      setCurrentPage(currentPage - 1)
+      setShowDetails(false)
     }
-  };
+  }
 
   const handleNext = () => {
     if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
-      setShowDetails(false);
+      setCurrentPage(currentPage + 1)
+      setShowDetails(false)
     }
-  };
+  }
 
   return (
     <div className="space-y-6 p-6 bg-gray-50 min-h-screen">
@@ -168,8 +155,7 @@ export function RecordsView() {
       <div className="space-y-2">
         <h1 className="text-3xl font-bold text-gray-900">Comms Records</h1>
         <p className="text-gray-600">
-          View stage-wise communication records for outages. Select an outage to
-          see details.
+          View stage-wise communication records for outages. Select an outage to see details.
         </p>
       </div>
 
@@ -179,7 +165,7 @@ export function RecordsView() {
           <div className="flex flex-wrap gap-4 items-center">
             <Input
               placeholder="Search by outage, location..."
-              className="w-64 border-gray-200 focus:border-blue-500 focus:ring-blue-500"
+              className="flex-1 min-w-80 border-gray-200 focus:border-blue-500 focus:ring-blue-500"
             />
             <Input
               placeholder="Filter by outage ID..."
@@ -215,9 +201,7 @@ export function RecordsView() {
               className="w-40 border-gray-200 focus:border-blue-500 focus:ring-blue-500"
               defaultValue="2025-02-02"
             />
-            <Button className="bg-blue-600 hover:bg-blue-700 text-white shadow-sm cursor-pointer">
-              Apply filters
-            </Button>
+            <Button className="bg-blue-600 hover:bg-blue-700 text-white shadow-sm cursor-pointer">Apply filters</Button>
           </div>
         </CardContent>
       </Card>
@@ -228,57 +212,39 @@ export function RecordsView() {
           <Table>
             <TableHeader>
               <TableRow className="bg-gray-50/50 border-b border-gray-200">
-                <TableHead className="font-semibold text-gray-700 cursor-default">
-                  Outage ID
-                </TableHead>
-                <TableHead className="font-semibold text-gray-700 cursor-default">
-                  Type
-                </TableHead>
-                <TableHead className="font-semibold text-gray-700 cursor-default">
-                  Location
-                </TableHead>
-                <TableHead className="font-semibold text-gray-700 cursor-default">
-                  Date
-                </TableHead>
-                <TableHead className="font-semibold text-gray-700 cursor-default">
-                  Consumers
-                </TableHead>
+                <TableHead className="font-semibold text-gray-700 cursor-default">Outage ID</TableHead>
+                <TableHead className="font-semibold text-gray-700 cursor-default">Type</TableHead>
+                <TableHead className="font-semibold text-gray-700 cursor-default">Location</TableHead>
+                <TableHead className="font-semibold text-gray-700 cursor-default">Date</TableHead>
+                <TableHead className="font-semibold text-gray-700 cursor-default">Consumers</TableHead>
                 <TableHead className="font-semibold text-gray-700 cursor-default"></TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {displayedOutages.map((outage) => (
-                <TableRow
-                  key={outage.id}
-                  className="hover:bg-gray-50/50 border-b border-gray-100 cursor-default">
-                  <TableCell className="font-medium text-gray-900">
-                    {outage.id}
-                  </TableCell>
+                <TableRow key={outage.id} className="hover:bg-gray-50/50 border-b border-gray-100 cursor-default">
+                  <TableCell className="font-medium text-gray-900">{outage.id}</TableCell>
                   <TableCell>
                     <Badge
-                      variant={
-                        outage.type === "Major" ? "destructive" : "secondary"
-                      }
+                      variant={outage.type === "Major" ? "destructive" : "secondary"}
                       className={
                         outage.type === "Major"
                           ? "bg-red-100 text-red-700 border-red-200"
                           : "bg-gray-100 text-gray-700 border-gray-200"
-                      }>
+                      }
+                    >
                       {outage.type}
                     </Badge>
                   </TableCell>
-                  <TableCell className="text-gray-700">
-                    {outage.location}
-                  </TableCell>
+                  <TableCell className="text-gray-700">{outage.location}</TableCell>
                   <TableCell className="text-gray-700">{outage.date}</TableCell>
-                  <TableCell className="text-gray-700">
-                    {outage.consumers}
-                  </TableCell>
+                  <TableCell className="text-gray-700">{outage.consumers}</TableCell>
                   <TableCell>
                     <Button
                       variant="link"
                       className="text-blue-600 hover:text-blue-700 p-0 font-medium cursor-pointer"
-                      onClick={() => handleViewClick(outage.id)}>
+                      onClick={() => handleViewClick(outage.id)}
+                    >
                       View
                     </Button>
                   </TableCell>
@@ -301,7 +267,8 @@ export function RecordsView() {
                     ? "text-gray-400 bg-white border-gray-200 cursor-not-allowed"
                     : "text-gray-700 hover:bg-gray-50 bg-white border-gray-200 hover:border-gray-300 cursor-pointer"
                 }
-                onClick={handlePrevious}>
+                onClick={handlePrevious}
+              >
                 Previous
               </Button>
               <Button
@@ -312,7 +279,8 @@ export function RecordsView() {
                     ? "text-gray-400 bg-white border-gray-200 cursor-not-allowed"
                     : "text-gray-700 hover:bg-gray-50 bg-white border-gray-200 hover:border-gray-300 cursor-pointer"
                 }
-                onClick={handleNext}>
+                onClick={handleNext}
+              >
                 Next
               </Button>
             </div>
@@ -322,23 +290,20 @@ export function RecordsView() {
 
       {/* Details Section */}
       {showDetails && selectedOutage && (
-        <Card
-          ref={detailsRef}
-          className="bg-white shadow-sm border border-gray-200">
+        <Card ref={detailsRef} className="bg-white shadow-sm border border-gray-200">
           <CardContent className="pt-6">
             <div className="flex items-center gap-4 mb-6">
               <Button
                 variant="outline"
-                className="bg-blue-50 text-blue-600 border-blue-200 hover:bg-blue-100 cursor-pointer">
+                className="bg-blue-50 text-blue-600 border-blue-200 hover:bg-blue-100 cursor-pointer"
+              >
                 Details
               </Button>
             </div>
 
             <div className="px-6 py-4 space-y-6">
               <div>
-                <h3 className="text-2xl font-bold text-gray-900">
-                  Comms record for Outage {selectedOutage}
-                </h3>
+                <h3 className="text-2xl font-bold text-gray-900">Comms record for Outage {selectedOutage}</h3>
                 <p className="text-gray-500">Last updated 2:06 pm</p>
               </div>
 
@@ -353,17 +318,14 @@ export function RecordsView() {
                           stage.status === "complete"
                             ? "bg-green-500 border-green-500"
                             : stage.status === "current"
-                            ? "bg-orange-400 border-orange-400"
-                            : "bg-gray-200 border-gray-300"
-                        }`}>
-                        {stage.status === "complete" && (
-                          <CheckCircle className="w-4 h-4 text-white" />
-                        )}
+                              ? "bg-orange-400 border-orange-400"
+                              : "bg-gray-200 border-gray-300"
+                        }`}
+                      >
+                        {stage.status === "complete" && <CheckCircle className="w-4 h-4 text-white" />}
                       </div>
                       <div>
-                        <h4 className="font-semibold text-gray-900">
-                          {stage.stage}
-                        </h4>
+                        <h4 className="font-semibold text-gray-900">{stage.stage}</h4>
                         <p className="text-sm text-gray-500">{stage.time}</p>
                       </div>
                     </div>
@@ -371,40 +333,25 @@ export function RecordsView() {
                     {/* Progress */}
                     <div className="space-y-1">
                       <div className="flex items-center gap-2">
-                        <span className="text-2xl font-bold text-gray-900">
-                          {stage.percentage}
-                        </span>
+                        <span className="text-2xl font-bold text-gray-900">{stage.percentage}</span>
                         <span className="text-gray-500">{stage.consumers}</span>
                       </div>
                     </div>
 
                     {/* Communications */}
                     <div className="space-y-2">
-                      <h5 className="font-medium text-gray-900">
-                        Comms compliance
-                      </h5>
+                      <h5 className="font-medium text-gray-900">Comms compliance</h5>
                       {stage.comms.map((comm, commIndex) => (
-                        <div
-                          key={commIndex}
-                          className="flex items-center justify-between">
-                          <span className="text-sm text-gray-600">
-                            {comm.type}
-                          </span>
+                        <div key={commIndex} className="flex items-center justify-between">
+                          <span className="text-sm text-gray-600">{comm.type}</span>
                           <div className="flex items-center gap-2">
                             <span
-                              className={`text-sm ${
-                                comm.status === "Exceed"
-                                  ? "text-orange-600"
-                                  : "text-gray-500"
-                              }`}>
+                              className={`text-sm ${comm.status === "Exceed" ? "text-orange-600" : "text-gray-500"}`}
+                            >
                               {comm.status}
                             </span>
-                            {comm.icon === "check" && (
-                              <CheckCircle className="w-4 h-4 text-blue-500" />
-                            )}
-                            {comm.icon === "warning" && (
-                              <AlertTriangle className="w-4 h-4 text-orange-500" />
-                            )}
+                            {comm.icon === "check" && <CheckCircle className="w-4 h-4 text-blue-500" />}
+                            {comm.icon === "warning" && <AlertTriangle className="w-4 h-4 text-orange-500" />}
                           </div>
                         </div>
                       ))}
@@ -417,5 +364,5 @@ export function RecordsView() {
         </Card>
       )}
     </div>
-  );
+  )
 }

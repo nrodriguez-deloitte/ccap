@@ -1,25 +1,12 @@
-"use client";
+"use client"
 
-import { useState } from "react";
-import { Card, CardContent } from "../ui/card";
-import { Input } from "../ui/input";
-import { Button } from "../ui/button";
-import { Badge } from "../ui/badge";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "../ui/table";
+import { useState } from "react"
+import { Card, CardContent } from "../ui/card"
+import { Input } from "../ui/input"
+import { Button } from "../ui/button"
+import { Badge } from "../ui/badge"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table"
 
 const outageRecords = [
   {
@@ -86,69 +73,59 @@ const outageRecords = [
     identified: "11/08/2025 11:16:31",
     status: "STAGE 1",
   },
-];
+]
 
 export function OutagesView() {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedOutage, setSelectedOutage] = useState("all");
-  const [selectedLocation, setSelectedLocation] = useState("all");
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
-  const [filteredRecords, setFilteredRecords] = useState(outageRecords);
+  const [searchTerm, setSearchTerm] = useState("")
+  const [selectedOutage, setSelectedOutage] = useState("all")
+  const [selectedLocation, setSelectedLocation] = useState("all")
+  const [startDate, setStartDate] = useState("")
+  const [endDate, setEndDate] = useState("")
+  const [filteredRecords, setFilteredRecords] = useState(outageRecords)
 
   const handleSearch = () => {
-    let filtered = outageRecords;
+    let filtered = outageRecords
 
     if (searchTerm) {
       filtered = filtered.filter(
         (record) =>
           record.incident.toLowerCase().includes(searchTerm.toLowerCase()) ||
           record.region.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          record.cause.toLowerCase().includes(searchTerm.toLowerCase())
-      );
+          record.cause.toLowerCase().includes(searchTerm.toLowerCase()),
+      )
     }
 
     if (selectedOutage !== "all") {
-      filtered = filtered.filter(
-        (record) => record.incident === selectedOutage
-      );
+      filtered = filtered.filter((record) => record.incident === selectedOutage)
     }
 
     if (selectedLocation !== "all") {
-      filtered = filtered.filter((record) =>
-        record.region.toLowerCase().includes(selectedLocation.toLowerCase())
-      );
+      filtered = filtered.filter((record) => record.region.toLowerCase().includes(selectedLocation.toLowerCase()))
     }
 
-    setFilteredRecords(filtered);
-  };
+    setFilteredRecords(filtered)
+  }
 
   return (
     <div className="space-y-6 p-6 bg-gray-50 min-h-screen">
-      <div className="space-y-2">
-        <h1 className="text-3xl font-bold text-gray-900">
-          Outage Communication Records
-        </h1>
-        <p className="text-gray-600">
-          Filter, find and extract notification records sent to customers during
-          an outage
+      <div className="space-y-2 mt-4">
+        <h1 className="text-3xl font-bold text-gray-900">Outage Communication Records</h1>
+        <p className="text-gray-600 mb-4">
+          Filter, find and extract notification records sent to customers during an outage
         </p>
       </div>
 
-      <Card>
-        <CardContent>
-          <div className="flex flex-wrap gap-4 py-4 items-end">
-            <div className="flex-1 min-w-[200px]">
-              <Input
-                placeholder="Search by outage, location or cause..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full"
-              />
-            </div>
-
+      <Card className="bg-white shadow-sm border border-gray-200">
+        <CardContent className="py-4">
+          <div className="flex flex-wrap gap-4 items-center">
+            <Input
+              placeholder="Search by outage, location or cause..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="flex-1 min-w-80 border-gray-200 focus:border-blue-500 focus:ring-blue-500"
+            />
             <Select value={selectedOutage} onValueChange={setSelectedOutage}>
-              <SelectTrigger className="w-[180px]">
+              <SelectTrigger className="w-40 border-gray-200 focus:border-blue-500 focus:ring-blue-500">
                 <SelectValue placeholder="Filter by outage ID..." />
               </SelectTrigger>
               <SelectContent>
@@ -160,11 +137,8 @@ export function OutagesView() {
                 ))}
               </SelectContent>
             </Select>
-
-            <Select
-              value={selectedLocation}
-              onValueChange={setSelectedLocation}>
-              <SelectTrigger className="w-[150px]">
+            <Select value={selectedLocation} onValueChange={setSelectedLocation}>
+              <SelectTrigger className="w-40 border-gray-200 focus:border-blue-500 focus:ring-blue-500">
                 <SelectValue placeholder="All Locations" />
               </SelectTrigger>
               <SelectContent>
@@ -174,99 +148,73 @@ export function OutagesView() {
                 <SelectItem value="brisbane">Brisbane</SelectItem>
               </SelectContent>
             </Select>
-
-            <div className="flex gap-2">
-              <Input
-                type="date"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-                className="w-[140px]"
-              />
-              <Input
-                type="date"
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
-                className="w-[140px]"
-              />
-            </div>
-
+            <Input
+              type="date"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+              className="w-40 border-gray-200 focus:border-blue-500 focus:ring-blue-500"
+            />
+            <Input
+              type="date"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+              className="w-40 border-gray-200 focus:border-blue-500 focus:ring-blue-500"
+            />
             <Button
               onClick={handleSearch}
-              className="bg-gray-900 hover:bg-gray-800 text-white px-6">
+              className="bg-blue-600 hover:bg-blue-700 text-white shadow-sm cursor-pointer"
+            >
               Apply filters
             </Button>
           </div>
         </CardContent>
       </Card>
 
-      <div className="py-4">
-        <Card>
-          <CardContent className="p-0">
-            <Table>
-              <TableHeader>
-                <TableRow className="bg-gray-50">
-                  <TableHead className="font-semibold text-gray-700">
-                    Incident
-                  </TableHead>
-                  <TableHead className="font-semibold text-gray-700">
-                    Region
-                  </TableHead>
-                  <TableHead className="font-semibold text-gray-700">
-                    ACMA
-                  </TableHead>
-                  <TableHead className="font-semibold text-gray-700">
-                    Cause of outage
-                  </TableHead>
-                  <TableHead className="font-semibold text-gray-700">
-                    Comms records
-                  </TableHead>
-                  <TableHead className="font-semibold text-gray-700">
-                    Identified
-                  </TableHead>
-                  <TableHead className="font-semibold text-gray-700">
-                    Status
-                  </TableHead>
+      <Card className="bg-white shadow-sm border border-gray-200">
+        <CardContent className="pt-6">
+          <Table>
+            <TableHeader>
+              <TableRow className="bg-gray-50/50 border-b border-gray-200">
+                <TableHead className="font-semibold text-gray-700 cursor-default">Incident</TableHead>
+                <TableHead className="font-semibold text-gray-700 cursor-default">Region</TableHead>
+                <TableHead className="font-semibold text-gray-700 cursor-default">ACMA</TableHead>
+                <TableHead className="font-semibold text-gray-700 cursor-default">Cause of outage</TableHead>
+                <TableHead className="font-semibold text-gray-700 cursor-default">Comms records</TableHead>
+                <TableHead className="font-semibold text-gray-700 cursor-default">Identified</TableHead>
+                <TableHead className="font-semibold text-gray-700 cursor-default">Status</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filteredRecords.map((record, index) => (
+                <TableRow key={record.incident} className="hover:bg-gray-50/50 border-b border-gray-100 cursor-default">
+                  <TableCell className="font-medium text-gray-900">{record.incident}</TableCell>
+                  <TableCell className="text-gray-700">{record.region}</TableCell>
+                  <TableCell className="text-gray-700">{record.acma}</TableCell>
+                  <TableCell className="text-gray-700">{record.cause}</TableCell>
+                  <TableCell>
+                    <Button variant="link" className="text-blue-600 hover:text-blue-700 p-0 font-medium cursor-pointer">
+                      View comms record
+                    </Button>
+                  </TableCell>
+                  <TableCell className="text-sm text-gray-600">{record.identified}</TableCell>
+                  <TableCell>
+                    <Badge
+                      variant={record.status === "Done" ? "secondary" : "default"}
+                      className={
+                        record.status === "Done"
+                          ? "bg-green-100 text-green-700 border-green-200"
+                          : "bg-blue-100 text-blue-700 border-blue-200"
+                      }
+                    >
+                      {record.status}
+                    </Badge>
+                  </TableCell>
                 </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredRecords.map((record, index) => (
-                  <TableRow key={record.incident} className="hover:bg-gray-50">
-                    <TableCell className="font-medium">
-                      {record.incident}
-                    </TableCell>
-                    <TableCell>{record.region}</TableCell>
-                    <TableCell>{record.acma}</TableCell>
-                    <TableCell>{record.cause}</TableCell>
-                    <TableCell>
-                      <Button
-                        variant="link"
-                        className="text-blue-600 hover:text-blue-800 p-0 h-auto font-normal">
-                        View comms record
-                      </Button>
-                    </TableCell>
-                    <TableCell className="text-sm text-gray-600">
-                      {record.identified}
-                    </TableCell>
-                    <TableCell>
-                      <Badge
-                        variant={
-                          record.status === "Done" ? "secondary" : "default"
-                        }
-                        className={
-                          record.status === "Done"
-                            ? "bg-green-100 text-green-800"
-                            : "bg-blue-100 text-blue-800"
-                        }>
-                        {record.status}
-                      </Badge>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
-      </div>
+              ))}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
 
       <div className="py-4">
         <p className="text-sm text-gray-600">
@@ -274,5 +222,5 @@ export function OutagesView() {
         </p>
       </div>
     </div>
-  );
+  )
 }
