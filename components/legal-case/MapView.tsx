@@ -294,7 +294,7 @@ export function MapView() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
           {stats.map((stat, index) => (
             <Card key={index}>
-              <CardContent className="p-6 text-center">
+              <CardContent className="px-6 text-center">
                 <div className="text-3xl font-bold text-gray-900 mb-2">{stat.value}</div>
                 <div className="text-sm text-gray-600">{stat.label}</div>
               </CardContent>
@@ -372,7 +372,7 @@ export function MapView() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {filteredOutages.map((outage) => (
             <Card key={outage.id} className="shadow-sm">
-              <CardContent className="p-4">
+              <CardContent className="px-4">
                 <div className="mb-3">
                   <div className="flex items-start justify-between mb-2">
                     <h3 className="font-semibold text-gray-900 text-base leading-tight">{outage.title}</h3>
