@@ -18,7 +18,7 @@ export function AISearchView() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Card className="bg-card border-border shadow-lg rounded-xl overflow-hidden">
+          <Card className="bg-card border-border shadow-sm rounded-xl overflow-hidden">
             <CardContent className="p-6">
               <div className="flex items-center space-x-4">
                 <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
@@ -32,7 +32,7 @@ export function AISearchView() {
             </CardContent>
           </Card>
 
-          <Card className="bg-card border-border shadow-lg rounded-xl overflow-hidden">
+          <Card className="bg-card border-border shadow-sm rounded-xl overflow-hidden">
             <CardContent className="p-6">
               <div className="flex items-center space-x-4">
                 <div className="w-12 h-12 rounded-lg bg-secondary/10 flex items-center justify-center">
@@ -46,7 +46,7 @@ export function AISearchView() {
             </CardContent>
           </Card>
 
-          <Card className="bg-card border-border shadow-lg rounded-xl overflow-hidden">
+          <Card className="bg-card border-border shadow-sm rounded-xl overflow-hidden">
             <CardContent className="p-6">
               <div className="flex items-center space-x-4">
                 <div className="w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center">
@@ -61,7 +61,7 @@ export function AISearchView() {
           </Card>
         </div>
 
-        <Card className="bg-card border-border shadow-lg rounded-xl overflow-hidden">
+        <Card className="bg-card border-border shadow-sm rounded-xl overflow-hidden">
           <CardContent className="p-8">
             <div className="text-center space-y-6">
               {/* AI Icon */}
