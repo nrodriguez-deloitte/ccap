@@ -1,15 +1,15 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { Card, CardContent } from "../ui/card"
-import { Button } from "../ui/button"
-import { Badge } from "../ui/badge"
-import type { google } from "google-maps"
+import { useState, useEffect } from "react";
+import { Card, CardContent } from "../ui/card";
+import { Button } from "../ui/button";
+import { Badge } from "../ui/badge";
+import type { google } from "google-maps";
 
 export function MapView() {
-  const [selectedFilter, setSelectedFilter] = useState("all")
-  const [map, setMap] = useState<google.maps.Map | null>(null)
-  const [mapError, setMapError] = useState<string | null>(null)
+  const [selectedFilter, setSelectedFilter] = useState("all");
+  const [map, setMap] = useState<google.maps.Map | null>(null);
+  const [mapError, setMapError] = useState<string | null>(null);
 
   const outages = [
     {
@@ -132,26 +132,26 @@ export function MapView() {
       location: { lat: -16.9186, lng: 145.7781 },
       category: "major",
     },
-  ]
+  ];
 
   const stats = [
     { label: "Total outage incidents", value: "12" },
     { label: "Services impacted", value: "15,000" },
     { label: "Current unplanned outages", value: "3,120" },
     { label: "Compliance risk", value: "52" },
-  ]
+  ];
 
   const filters = [
     { id: "all", label: "All unplanned ACMA outages", count: 12 },
     { id: "major", label: "Major", count: 10 },
     { id: "significant", label: "Significant", count: 2 },
     { id: "compliance", label: "Compliance risk", count: 0 },
-  ]
+  ];
 
   useEffect(() => {
     const initMap = () => {
       if (typeof window !== "undefined" && window.google) {
-        const mapElement = document.getElementById("map")
+        const mapElement = document.getElementById("map");
         if (mapElement) {
           try {
             const googleMap = new window.google.maps.Map(mapElement, {
@@ -164,7 +164,7 @@ export function MapView() {
                   stylers: [{ color: "#a2daf2" }],
                 },
               ],
-            })
+            });
 
             outages.forEach((outage) => {
               const marker = new window.google.maps.Marker({
@@ -175,127 +175,148 @@ export function MapView() {
                   path: window.google.maps.SymbolPath.CIRCLE,
                   scale: outage.servicesImpacted > 5000 ? 12 : 8,
                   fillColor:
-                    outage.severity === "Major" ? "#ef4444" : outage.severity === "Significant" ? "#f59e0b" : "#10b981",
+                    outage.severity === "Major"
+                      ? "#ef4444"
+                      : outage.severity === "Significant"
+                      ? "#f59e0b"
+                      : "#10b981",
                   fillOpacity: 0.8,
                   strokeColor: "#ffffff",
                   strokeWeight: 2,
                 },
-              })
+              });
 
               if (outage.servicesImpacted > 0) {
                 new window.google.maps.Circle({
-                  strokeColor: outage.severity === "Major" ? "#ef4444" : "#f59e0b",
+                  strokeColor:
+                    outage.severity === "Major" ? "#ef4444" : "#f59e0b",
                   strokeOpacity: 0.8,
                   strokeWeight: 2,
-                  fillColor: outage.severity === "Major" ? "#ef4444" : "#f59e0b",
+                  fillColor:
+                    outage.severity === "Major" ? "#ef4444" : "#f59e0b",
                   fillOpacity: 0.2,
                   map: googleMap,
                   center: outage.location,
                   radius: outage.servicesImpacted * 10,
-                })
+                });
               }
-            })
+            });
 
-            setMap(googleMap)
-            setMapError(null)
+            setMap(googleMap);
+            setMapError(null);
           } catch (error) {
-            console.error("Error initializing Google Maps:", error)
-            setMapError("Failed to initialize map. Please check your API key configuration.")
+            console.error("Error initializing Google Maps:", error);
+            setMapError(
+              "Failed to initialize map. Please check your API key configuration."
+            );
           }
         }
       }
-    }
+    };
 
     const handleMapError = (error: any) => {
-      console.error("Google Maps API Error:", error)
-      if (error.message && error.message.includes("RefererNotAllowedMapError")) {
+      console.error("Google Maps API Error:", error);
+      if (
+        error.message &&
+        error.message.includes("RefererNotAllowedMapError")
+      ) {
         setMapError(
-          "API key not configured for this domain. Please add the current domain to your Google Cloud Console API key restrictions.",
-        )
+          "API key not configured for this domain. Please add the current domain to your Google Cloud Console API key restrictions."
+        );
       } else {
-        setMapError("Failed to load Google Maps. Please check your API key and internet connection.")
+        setMapError(
+          "Failed to load Google Maps. Please check your API key and internet connection."
+        );
       }
-    }
+    };
 
     if (window.google && window.google.maps) {
-      initMap()
-      return
+      initMap();
+      return;
     }
 
-    const existingScript = document.querySelector('script[src*="maps.googleapis.com"]')
+    const existingScript = document.querySelector(
+      'script[src*="maps.googleapis.com"]'
+    );
     if (existingScript) {
       const checkGoogleMaps = () => {
         if (window.google && window.google.maps) {
-          initMap()
+          initMap();
         } else {
-          setTimeout(checkGoogleMaps, 100)
+          setTimeout(checkGoogleMaps, 100);
         }
-      }
-      checkGoogleMaps()
-      return
+      };
+      checkGoogleMaps();
+      return;
     }
 
-    const script = document.createElement("script")
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&callback=initGoogleMap`
-    script.async = true
-    script.defer = true
+    const script = document.createElement("script");
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&callback=initGoogleMap`;
+    script.async = true;
+    script.defer = true;
 
-    window.initGoogleMap = initMap
+    window.initGoogleMap = initMap;
 
     script.onerror = (error) => {
-      handleMapError(error)
-    }
+      handleMapError(error);
+    };
 
     window.gm_authFailure = () => {
       setMapError(
-        "Google Maps API authentication failed. Please check your API key configuration in Google Cloud Console.",
-      )
-    }
+        "Google Maps API authentication failed. Please check your API key configuration in Google Cloud Console."
+      );
+    };
 
-    document.head.appendChild(script)
+    document.head.appendChild(script);
 
     return () => {
       if (window.initGoogleMap) {
-        delete window.initGoogleMap
+        delete window.initGoogleMap;
       }
       if (window.gm_authFailure) {
-        delete window.gm_authFailure
+        delete window.gm_authFailure;
       }
-    }
-  }, [])
+    };
+  }, []);
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {
       case "Major":
-        return "bg-red-100 text-red-800 border-red-200"
+        return "bg-red-100 text-red-800 border-red-200";
       case "Significant":
-        return "bg-red-100 text-red-800 border-red-200"
+        return "bg-red-100 text-red-800 border-red-200";
       default:
-        return "bg-gray-100 text-gray-800 border-gray-200"
+        return "bg-gray-100 text-gray-800 border-gray-200";
     }
-  }
+  };
 
   const filteredOutages = outages.filter((outage) => {
-    if (selectedFilter === "all") return true
-    if (selectedFilter === "major") return outage.category === "major"
-    if (selectedFilter === "significant") return outage.category === "significant"
-    if (selectedFilter === "compliance") return outage.category === "compliance"
-    return true
-  })
+    if (selectedFilter === "all") return true;
+    if (selectedFilter === "major") return outage.category === "major";
+    if (selectedFilter === "significant")
+      return outage.category === "significant";
+    if (selectedFilter === "compliance")
+      return outage.category === "compliance";
+    return true;
+  });
 
   return (
     <div className="bg-gray-50 min-h-screen pb-5">
       <div className="px-6 py-4">
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold text-gray-900">Current unplanned outages</h1>
-          <span className="text-sm text-gray-600">Last updated at 1:35pm</span>
+          <h1 className="text-3xl font-bold text-gray-900">
+            Current unplanned outages
+          </h1>
+          <p className="text-sm text-gray-600">Last updated at 1:35pm</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
           {stats.map((stat, index) => (
             <Card key={index}>
               <CardContent className="px-6 text-center">
-                <div className="text-3xl font-bold text-gray-900 mb-2">{stat.value}</div>
+                <div className="text-3xl font-bold text-gray-900 mb-2">
+                  {stat.value}
+                </div>
                 <div className="text-sm text-gray-600">{stat.label}</div>
               </CardContent>
             </Card>
@@ -362,8 +383,7 @@ export function MapView() {
               key={filter.id}
               variant={selectedFilter === filter.id ? "default" : "outline"}
               onClick={() => setSelectedFilter(filter.id)}
-              className="cursor-pointer"
-            >
+              className="cursor-pointer">
               {filter.label} ({filter.count})
             </Button>
           ))}
@@ -375,14 +395,19 @@ export function MapView() {
               <CardContent className="px-4">
                 <div className="mb-3">
                   <div className="flex items-start justify-between mb-2">
-                    <h3 className="font-semibold text-gray-900 text-base leading-tight">{outage.title}</h3>
+                    <h3 className="font-semibold text-gray-900 text-base leading-tight">
+                      {outage.title}
+                    </h3>
                     <Badge
-                      className={`${getSeverityColor(outage.severity)} text-xs font-medium px-2 py-1 ml-2 flex-shrink-0`}
-                    >
+                      className={`${getSeverityColor(
+                        outage.severity
+                      )} text-xs font-medium px-2 py-1 ml-2 flex-shrink-0`}>
                       {outage.severity}
                     </Badge>
                   </div>
-                  <p className="text-sm text-gray-600 mb-3">Updated {outage.updated}</p>
+                  <p className="text-sm text-gray-600 mb-3">
+                    Updated {outage.updated}
+                  </p>
                   <div className="flex items-center justify-between">
                     <button className="text-sm text-blue-600 hover:text-blue-800 font-medium cursor-pointer">
                       {outage.stage}
@@ -400,5 +425,5 @@ export function MapView() {
         </div>
       </div>
     </div>
-  )
+  );
 }
