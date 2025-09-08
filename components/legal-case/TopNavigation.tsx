@@ -37,7 +37,6 @@ function getModeTab(): NavItem {
 const navigationItems: NavItem[] = [
   { id: "ai-search", label: "AI Search", icon: <Sparkles className="h-4 w-4" /> },
   { id: "map", label: "Map", icon: <Map className="h-4 w-4" /> },
-  getModeTab(),
   { id: "records", label: "Records", icon: <FileText className="h-4 w-4" /> },
   { id: "templates", label: "Templates", icon: <Layout className="h-4 w-4" /> },
   { id: "create-comms", label: "Create comms", icon: <Plus className="h-4 w-4" /> },
