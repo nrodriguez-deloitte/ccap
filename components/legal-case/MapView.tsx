@@ -5,148 +5,23 @@ import { Card, CardContent } from "../ui/card";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
 import type { google } from "google-maps";
+import { demoMode, getMapDataset } from "@/lib/demoConfig";
+
+declare global {
+  interface Window {
+    initGoogleMap?: () => void;
+    gm_authFailure?: () => void;
+  }
+}
 
 export function MapView() {
   const [selectedFilter, setSelectedFilter] = useState("all");
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [mapError, setMapError] = useState<string | null>(null);
 
-  const outages = [
-    {
-      id: "sydney-outage-3",
-      title: "Sydney Outage 3",
-      severity: "Significant",
-      updated: "8/19/2025, 9:59:00 PM",
-      stage: "Stage 1",
-      servicesImpacted: 10000,
-      location: { lat: -33.8688, lng: 151.2093 },
-      category: "significant",
-    },
-    {
-      id: "network-connectivity",
-      title: "Network connectivity issue in Sydney CBD area",
-      severity: "Major",
-      updated: "8/19/2025, 9:58:43 PM",
-      stage: "Stage 1",
-      servicesImpacted: 5000,
-      location: { lat: -33.865, lng: 151.2094 },
-      category: "major",
-    },
-    {
-      id: "sydney-outage",
-      title: "Sydney Outage",
-      severity: "Significant",
-      updated: "8/18/2025, 1:07:24 PM",
-      stage: "Stage 1",
-      servicesImpacted: 0,
-      location: { lat: -33.87, lng: 151.21 },
-      category: "significant",
-    },
-    {
-      id: "inc10-major",
-      title: "INC10 - Major Outage",
-      severity: "Major",
-      updated: "8/14/2025, 2:47:07 PM",
-      stage: "Stage 1",
-      servicesImpacted: 0,
-      location: { lat: -37.8136, lng: 144.9631 },
-      category: "major",
-    },
-    {
-      id: "inc1-major",
-      title: "INC1 - Major Outage",
-      severity: "Major",
-      updated: "8/14/2025, 2:42:28 PM",
-      stage: "Stage 1",
-      servicesImpacted: 0,
-      location: { lat: -31.9505, lng: 115.8605 },
-      category: "major",
-    },
-    {
-      id: "inc12445-major",
-      title: "INC12445 - Major Outage",
-      severity: "Major",
-      updated: "8/11/2025, 11:30:21 AM",
-      stage: "Stage 1",
-      servicesImpacted: 0,
-      location: { lat: -34.9285, lng: 138.6007 },
-      category: "major",
-    },
-    {
-      id: "inc1244-major",
-      title: "INC1244 - Major Outage",
-      severity: "Major",
-      updated: "8/11/2025, 11:27:31 AM",
-      stage: "Stage 1",
-      servicesImpacted: 0,
-      location: { lat: -27.4698, lng: 153.0251 },
-      category: "major",
-    },
-    {
-      id: "inc1234-major",
-      title: "INC1234 - Major Outage",
-      severity: "Major",
-      updated: "8/11/2025, 11:18:38 AM",
-      stage: "Stage 1",
-      servicesImpacted: 0,
-      location: { lat: -42.8821, lng: 147.3272 },
-      category: "major",
-    },
-    {
-      id: "inc123456-major",
-      title: "INC123456 - Major Outage",
-      severity: "Major",
-      updated: "8/11/2025, 11:10:29 AM",
-      stage: "Stage 1",
-      servicesImpacted: 0,
-      location: { lat: -35.2809, lng: 149.13 },
-      category: "major",
-    },
-    {
-      id: "inc12345-major",
-      title: "INC12345 - Major Outage",
-      severity: "Major",
-      updated: "8/11/2025, 11:05:15 AM",
-      stage: "Stage 1",
-      servicesImpacted: 0,
-      location: { lat: -12.4634, lng: 130.8456 },
-      category: "major",
-    },
-    {
-      id: "inc123-major-1",
-      title: "INC123 - Major Outage",
-      severity: "Major",
-      updated: "8/8/2025, 1:42:52 PM",
-      stage: "Stage 1",
-      servicesImpacted: 0,
-      location: { lat: -23.698, lng: 133.8807 },
-      category: "major",
-    },
-    {
-      id: "inc123-major-2",
-      title: "INC123 - Major Outage",
-      severity: "Major",
-      updated: "8/8/2025, 11:33:10 AM",
-      stage: "Stage 1",
-      servicesImpacted: 0,
-      location: { lat: -16.9186, lng: 145.7781 },
-      category: "major",
-    },
-  ];
-
-  const stats = [
-    { label: "Total outage incidents", value: "12" },
-    { label: "Services impacted", value: "15,000" },
-    { label: "Current unplanned outages", value: "3,120" },
-    { label: "Compliance risk", value: "52" },
-  ];
-
-  const filters = [
-    { id: "all", label: "All unplanned ACMA outages", count: 12 },
-    { id: "major", label: "Major", count: 10 },
-    { id: "significant", label: "Significant", count: 2 },
-    { id: "compliance", label: "Compliance risk", count: 0 },
-  ];
+  // Dynamic dataset based on demo mode
+  const dataset = getMapDataset(demoMode);
+  const { items, stats, filters, title, subtitle } = dataset;
 
   useEffect(() => {
     const initMap = () => {
@@ -166,38 +41,33 @@ export function MapView() {
               ],
             });
 
-            outages.forEach((outage) => {
-              const marker = new window.google.maps.Marker({
-                position: outage.location,
+            items.forEach((item) => {
+              const position = { lat: item.lat, lng: item.lng };
+              new window.google.maps.Marker({
+                position,
                 map: googleMap,
-                title: outage.title,
+                title: item.title,
                 icon: {
                   path: window.google.maps.SymbolPath.CIRCLE,
-                  scale: outage.servicesImpacted > 5000 ? 12 : 8,
-                  fillColor:
-                    outage.severity === "Major"
-                      ? "#ef4444"
-                      : outage.severity === "Significant"
-                      ? "#f59e0b"
-                      : "#10b981",
-                  fillOpacity: 0.8,
+                  scale: Math.max(6, Math.min(18, dataset.circleRadius(item) / 50)),
+                  fillColor: dataset.markerColor(item),
+                  fillOpacity: 0.85,
                   strokeColor: "#ffffff",
                   strokeWeight: 2,
                 },
               });
 
-              if (outage.servicesImpacted > 0) {
+              const radius = dataset.circleRadius(item);
+              if (radius > 0) {
                 new window.google.maps.Circle({
-                  strokeColor:
-                    outage.severity === "Major" ? "#ef4444" : "#f59e0b",
-                  strokeOpacity: 0.8,
-                  strokeWeight: 2,
-                  fillColor:
-                    outage.severity === "Major" ? "#ef4444" : "#f59e0b",
-                  fillOpacity: 0.2,
+                  strokeColor: dataset.markerColor(item),
+                  strokeOpacity: 0.55,
+                  strokeWeight: 1,
+                  fillColor: dataset.markerColor(item),
+                  fillOpacity: 0.15,
                   map: googleMap,
-                  center: outage.location,
-                  radius: outage.servicesImpacted * 10,
+                  center: position,
+                  radius,
                 });
               }
             });
@@ -290,24 +160,21 @@ export function MapView() {
     }
   };
 
-  const filteredOutages = outages.filter((outage) => {
+  const filteredItems = items.filter((i) => {
     if (selectedFilter === "all") return true;
-    if (selectedFilter === "major") return outage.category === "major";
-    if (selectedFilter === "significant")
-      return outage.category === "significant";
-    if (selectedFilter === "compliance")
-      return outage.category === "compliance";
-    return true;
+    return i.category === selectedFilter;
   });
 
   return (
     <div className="bg-gray-50 min-h-screen pb-5">
       <div className="px-6 py-6">
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl font-bold text-gray-900">
-            Current unplanned outages
-          </h1>
-          <p className="text-sm text-gray-600">Last updated at 1:35pm</p>
+          <h1 className="text-3xl font-bold text-gray-900">{title}</h1>
+          {subtitle && (
+            <p className="text-sm text-gray-600">
+              {subtitle} · Mode: <span className="font-medium">{demoMode}</span>
+            </p>
+          )}
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
@@ -390,32 +257,33 @@ export function MapView() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {filteredOutages.map((outage) => (
-            <Card key={outage.id} className="shadow-sm py-4">
+          {filteredItems.map((item) => (
+            <Card key={item.id} className="shadow-sm py-4">
               <CardContent className="px-4">
                 <div className="mb-3">
                   <div className="flex items-start justify-between mb-2">
                     <h3 className="font-semibold text-gray-900 text-base leading-tight">
-                      {outage.title}
+                      {item.title}
                     </h3>
-                    <Badge
-                      className={`${getSeverityColor(
-                        outage.severity
-                      )} text-xs font-medium px-2 py-1 ml-2 flex-shrink-0`}>
-                      {outage.severity}
-                    </Badge>
+                    {item.label && (
+                      <Badge className="bg-gray-100 text-gray-700 border text-xs font-medium px-2 py-1 ml-2 flex-shrink-0">
+                        {item.label}
+                      </Badge>
+                    )}
                   </div>
-                  <p className="text-sm text-gray-600 mb-3">
-                    Updated {outage.updated}
-                  </p>
+                  {item.meta?.updated && (
+                    <p className="text-sm text-gray-600 mb-3">
+                      Updated {item.meta.updated}
+                    </p>
+                  )}
                   <div className="flex items-center justify-between">
-                    <button className="text-sm text-blue-600 hover:text-blue-800 font-medium cursor-pointer">
-                      {outage.stage}
-                    </button>
-                    <span className="text-sm font-medium text-gray-900">
-                      {outage.servicesImpacted > 0
-                        ? `${outage.servicesImpacted.toLocaleString()} services impacted`
-                        : "—"}
+                    {item.label && (
+                      <button className="text-sm text-blue-600 hover:text-blue-800 font-medium cursor-pointer">
+                        {item.label}
+                      </button>
+                    )}
+                    <span className="text-sm font-medium text-gray-900 truncate ml-auto">
+                      {item.primaryMetric.toLocaleString()}
                     </span>
                   </div>
                 </div>

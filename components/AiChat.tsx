@@ -3,6 +3,10 @@
 import type React from "react"
 import { useEffect, useRef, useState } from "react"
 
+// Demo mode support (aligns with rest of app)
+type DemoMode = "outages" | "bids" | "communications" | "complaints"
+const demoMode: DemoMode = (process.env.NEXT_PUBLIC_DEMO_MODE as DemoMode) || "outages"
+
 type Role = "user" | "bot" | "thinking"
 type Kind = "text" | "summary" | "card"
 
@@ -16,10 +20,88 @@ type Message = {
     tags: string[]
     location: string
     created: string // dd/MM/yyyy
-    impacted: number
+    impacted: number // semantic meaning depends on mode
     description: string
   }
   ts: string // HH:mm
+}
+
+interface ChatModeConfig {
+  breadcrumb: string
+  placeholder: string
+  impactedLabel: string // label for card impacted field
+  summaryLabel: (impacted: number) => string
+  buildMock: (query: string) => { narrative: string; summary: string; card: Message["card"] }
+}
+
+const CHAT_CONFIG: Record<DemoMode, ChatModeConfig> = {
+  outages: {
+    breadcrumb: "AI Search › Outages",
+    placeholder: "Ask anything about network outages",
+    impactedLabel: "services impacted",
+    summaryLabel: (n) => `1 outage • ${n.toLocaleString()} services impacted`,
+    buildMock: (q) => {
+      const outageId = parseOutageId(q) ?? "NO-506"
+      const impacted = 120_000
+      const created = "18/08/2025"
+      const title = "Network connectivity issue in Sydney CBD area"
+      const location = "Sydney CBD, NSW"
+      const tags = ["Major", "Major", "Classified"]
+      const description =
+        "Around 3:20 AM local time, monitoring detected a disruption affecting broadband and fixed-line voice services across Sydney CBD. Field reports point to fibre damage during scheduled road works. Initial restoration estimate: ~8 hours. Primary impact: Sydney Metro."
+      const narrative = `Outage ${outageId} is a major network connectivity issue affecting the Sydney CBD area. Detected at approximately 3:20 AM local time on 2025-08-18, the incident disrupted around ${impacted.toLocaleString()} broadband and fixed-line voice services. Repairs are estimated at ~8 hours. The outage is currently in 'STAGE 1' with elevated customer impact risk.`
+      return { narrative, summary: `1 outages • ${impacted.toLocaleString()} services impacted`, card: { title, tags, location, created, impacted, description } }
+    },
+  },
+  bids: {
+    breadcrumb: "AI Search › Bids",
+    placeholder: "Ask about pipeline, value or review cycles",
+    impactedLabel: "est. value (USD)",
+    summaryLabel: (n) => `1 bid • $${(n / 1_000_000).toFixed(1)}M total value`,
+    buildMock: (q) => {
+      const id = (q.match(/BID[-\s]?(\d{3,})/i)?.[0] ?? "BID-1002").toUpperCase()
+      const impacted = 2_245_000 // value
+      const created = "14/08/2025"
+      const title = "NextGen Fiber Backbone (Phase II)"
+      const location = "Northeast Region"
+      const tags = ["In Review", "Network", "Strategic"]
+      const description = `Bid ${id} targets expansion of resilient fiber backbone capacity across secondary metros to support low-latency applications. Evaluation focus: scalability, sustainability metrics, projected regional economic uplift.`
+      const narrative = `Bid ${id} is currently in 'In Review' stage with an estimated value of $${impacted.toLocaleString()}. Review cycle time is tracking 3 days faster than median. Primary differentiation: modular deployment model and strong sustainability scoring.`
+      return { narrative, summary: `1 bid • $${impacted.toLocaleString()} value in review`, card: { title, tags, location, created, impacted, description } }
+    },
+  },
+  communications: {
+    breadcrumb: "AI Search › Communications",
+    placeholder: "Ask about campaigns, channels or engagement",
+    impactedLabel: "messages sent",
+    summaryLabel: (n) => `1 campaign • ${n.toLocaleString()} messages sent`,
+    buildMock: (q) => {
+      const impacted = 164_250 // messages
+      const created = "16/08/2025"
+      const title = "API Latency Advisory (Developers Segment)"
+      const location = "Channels: Email + SMS"
+      const tags = ["Active", "Multi-channel", "Targeted"]
+      const description = `Advisory campaign notifying developer accounts of intermittent API latency in critical endpoints. Open rate trending above baseline (+4.2%). SMS fallback engaged for 12% of audience after deferred email delivery.`
+      const narrative = `The latency advisory campaign is active with ${impacted.toLocaleString()} cumulative deliveries. Engagement uplift driven by segmented subject line testing. CTR is outperforming the rolling 30‑day average.`
+      return { narrative, summary: `1 campaign • ${impacted.toLocaleString()} deliveries`, card: { title, tags, location, created, impacted, description } }
+    },
+  },
+  complaints: {
+    breadcrumb: "AI Search › Complaints",
+    placeholder: "Ask about SLA, categories or escalations",
+    impactedLabel: "cases affected",
+    summaryLabel: (n) => `1 case cluster • ${n.toLocaleString()} cases affected`,
+    buildMock: (q) => {
+      const impacted = 312 // cases
+      const created = "16/08/2025"
+      const title = "Billing Discrepancy Escalations – West"
+      const location = "Region: West"
+      const tags = ["Escalated", "Billing", "SLA Risk"]
+      const description = `Cluster of billing discrepancy complaints nearing SLA thresholds. Root cause linked to proration logic regression in invoice microservice. Temporary remediation deployed; monitoring stabilization metrics.`
+      const narrative = `Billing escalation cluster shows ${impacted.toLocaleString()} active cases with rising SLA exposure. Mean first response: 42m. Recommend expedited regression patch validation and proactive outbound status messaging.`
+      return { narrative, summary: `1 escalation cluster • ${impacted.toLocaleString()} open cases`, card: { title, tags, location, created, impacted, description } }
+    },
+  },
 }
 
 function formatHHmm(date = new Date()) {
@@ -32,6 +114,7 @@ function parseOutageId(q: string): string | undefined {
 }
 
 export default function AiChat({ initialQuery }: { initialQuery?: string }) {
+  const cfg = CHAT_CONFIG[demoMode]
   const [input, setInput] = useState("")
   const [messages, setMessages] = useState<Message[]>([])
   const chatRef = useRef<HTMLDivElement>(null)
@@ -62,42 +145,14 @@ export default function AiChat({ initialQuery }: { initialQuery?: string }) {
     setMessages((m) => [...m, userMsg, thinkMsg])
 
     // Mocked AI flow: after a short delay, replace thinking with summary, stats, and a rich card
-    const outageId = parseOutageId(q) ?? "NO-506"
-    const impacted = 120_000
-    const created = "18/08/2025"
-    const title = "Network connectivity issue in Sydney CBD area"
-    const location = "Sydney CBD, NSW"
-    const tags = ["Major", "Major", "Classified"]
-    const description =
-      "Around 3:20 AM local time, monitoring detected a disruption affecting broadband and fixed-line voice services across Sydney CBD. Field reports point to fibre damage during scheduled road works. Initial restoration estimate: ~8 hours. Primary impact: Sydney Metro."
-
-    const narrative = `Outage ${outageId} is a major network connectivity issue affecting the Sydney CBD area. Detected at approximately 3:20 AM local time on 2025-08-18, the incident disrupted around ${impacted.toLocaleString()} broadband and fixed-line voice services. Customers reported an inability to make or receive calls and no internet access. The likely cause is damage to a regional fibre optic cable during scheduled road works. Repairs are estimated to take about 8 hours, with the primary impact on Sydney Metro. The outage is currently in 'STAGE 1' and classified as a major outage.`
-
     setTimeout(() => {
       setMessages((m) => {
         const withoutThinking = m.filter((x) => x.role !== "thinking")
-        const botText: Message = {
-          id: crypto.randomUUID(),
-          role: "bot",
-          kind: "text",
-          text: narrative,
-          ts: formatHHmm(),
-        }
-        const botStats: Message = {
-          id: crypto.randomUUID(),
-          role: "bot",
-          kind: "summary",
-          text: `1 outages • ${impacted.toLocaleString()} services impacted`,
-          ts: formatHHmm(),
-        }
-        const botCard: Message = {
-          id: crypto.randomUUID(),
-          role: "bot",
-          kind: "card",
-          card: { title, tags, location, created, impacted, description },
-          ts: formatHHmm(),
-        }
-        return [...withoutThinking, botText, botStats, botCard]
+  const built = cfg.buildMock(q)
+  const botText: Message = { id: crypto.randomUUID(), role: "bot", kind: "text", text: built.narrative, ts: formatHHmm() }
+  const botStats: Message = { id: crypto.randomUUID(), role: "bot", kind: "summary", text: built.summary, ts: formatHHmm() }
+  const botCard: Message = { id: crypto.randomUUID(), role: "bot", kind: "card", card: built.card, ts: formatHHmm() }
+  return [...withoutThinking, botText, botStats, botCard]
       })
     }, 3000)
   }
@@ -105,7 +160,7 @@ export default function AiChat({ initialQuery }: { initialQuery?: string }) {
   return (
     <section className="ai-view">
       <div className="ai-header">
-        <div className="crumbs">AI Search › Outages</div>
+  <div className="crumbs">{cfg.breadcrumb}</div>
         <button className="btn" onClick={() => setMessages([])}>
           Clear
         </button>
@@ -120,7 +175,7 @@ export default function AiChat({ initialQuery }: { initialQuery?: string }) {
           <input
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Ask anything about network outages"
+            placeholder={cfg.placeholder}
             aria-label="Chat input"
           />
           <button type="submit" aria-label="Send">
@@ -180,6 +235,18 @@ function ChatMessage({ msg }: { msg: Message }) {
 }
 
 function RichOutageCard({ card }: { card: NonNullable<Message["card"]> }) {
+  // Render label adaptively based on demoMode
+  const impactedLabels: Record<DemoMode, string> = {
+    outages: "services impacted",
+    bids: "est. value (USD)",
+    communications: "messages sent",
+    complaints: "cases affected",
+  }
+  const label = impactedLabels[demoMode]
+  const impactedDisplay =
+    demoMode === "bids"
+      ? `$${card.impacted.toLocaleString()}`
+      : card.impacted.toLocaleString()
   return (
     <div className="outage-card">
       <div className="oc-title">{card.title}</div>
@@ -193,13 +260,11 @@ function RichOutageCard({ card }: { card: NonNullable<Message["card"]> }) {
       </div>
       <div className="oc-meta">
         <span>Created {card.created}</span>
-        <span className="right">{card.impacted.toLocaleString()} services impacted</span>
+        <span className="right">{impactedDisplay} {label}</span>
       </div>
       <div className="oc-desc">{card.description}</div>
       <div className="oc-actions">
-        <button className="btn" onClick={() => window.alert("Details panel coming soon")}>
-          Open details
-        </button>
+        <button className="btn" onClick={() => window.alert("Details panel coming soon")}>Open details</button>
       </div>
     </div>
   )

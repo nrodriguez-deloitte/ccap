@@ -4,6 +4,10 @@ import type React from "react"
 import { Button } from "../ui/button"
 import { Map, AlertTriangle, FileText, Layout, Plus, Sparkles } from "lucide-react"
 
+// Adaptive label for the third tab based on demo mode
+type DemoMode = "outages" | "bids" | "communications" | "complaints"
+const demoMode: DemoMode = (process.env.NEXT_PUBLIC_DEMO_MODE as DemoMode) || "outages"
+
 interface TopNavigationProps {
   activeView: string
   onViewChange: (view: string) => void
@@ -15,37 +19,28 @@ interface NavItem {
   icon: React.ReactNode
 }
 
+// Map demo mode to a user-facing label & icon (keep id 'outages' so rest of app logic remains unchanged)
+function getModeTab(): NavItem {
+  switch (demoMode) {
+    case "bids":
+      return { id: "outages", label: "Bids", icon: <FileText className="h-4 w-4" /> }
+    case "communications":
+      return { id: "outages", label: "Communications", icon: <FileText className="h-4 w-4" /> }
+    case "complaints":
+      return { id: "outages", label: "Complaints", icon: <AlertTriangle className="h-4 w-4" /> }
+    case "outages":
+    default:
+      return { id: "outages", label: "Outages", icon: <AlertTriangle className="h-4 w-4" /> }
+  }
+}
+
 const navigationItems: NavItem[] = [
-  {
-    id: "ai-search",
-    label: "AI Search",
-    icon: <Sparkles className="h-4 w-4" />,
-  },
-  {
-    id: "map",
-    label: "Map",
-    icon: <Map className="h-4 w-4" />,
-  },
-  {
-    id: "outages",
-    label: "Outages",
-    icon: <AlertTriangle className="h-4 w-4" />,
-  },
-  {
-    id: "records",
-    label: "Records",
-    icon: <FileText className="h-4 w-4" />,
-  },
-  {
-    id: "templates",
-    label: "Templates",
-    icon: <Layout className="h-4 w-4" />,
-  },
-  {
-    id: "create-comms",
-    label: "Create comms",
-    icon: <Plus className="h-4 w-4" />,
-  },
+  { id: "ai-search", label: "AI Search", icon: <Sparkles className="h-4 w-4" /> },
+  { id: "map", label: "Map", icon: <Map className="h-4 w-4" /> },
+  getModeTab(),
+  { id: "records", label: "Records", icon: <FileText className="h-4 w-4" /> },
+  { id: "templates", label: "Templates", icon: <Layout className="h-4 w-4" /> },
+  { id: "create-comms", label: "Create comms", icon: <Plus className="h-4 w-4" /> },
 ]
 
 export function TopNavigation({ activeView, onViewChange }: TopNavigationProps) {
